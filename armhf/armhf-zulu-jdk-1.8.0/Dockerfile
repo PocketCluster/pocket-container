@@ -14,5 +14,6 @@ RUN mkdir -p /opt &&\
     mv /ezdk-1.8.0_102-8.17.0.21-eval-linux_aarch32hf /opt/jdk &&\
     rm /ezdk-1.8.0_102-8.17.0.21-eval-linux_aarch32hf.tar.gz &&\
     rm -rf /opt/jdk/*src.zip &&\
+    chown -R root:root /opt/jdk &&\
     /bin/bash /ezdk-1.8.0-102-java-post-install.sh &&\
     rm /ezdk-1.8.0-102-java-post-install.sh
