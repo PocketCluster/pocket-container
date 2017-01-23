@@ -1,0 +1,14 @@
+FROM pocketcluster/amd64-hadoop-base-2.6.5:latest
+MAINTAINER PocketCluster <stkim1@pocketcluster.io>
+
+# ROOT USER
+USER root
+
+# Prepare files
+COPY launch.sh /
+RUN chmod a+x /launch.sh
+
+#ENTRYPOINT ["/launch.sh"]
+CMD ["/launch.sh"]
+
+EXPOSE 22 7373 7946 8030 8031 8032 8033 8040 8042 8060 8088 9000 10020 19888 50010 50020 50060 50070 50075 50090 50475 54310 54311
