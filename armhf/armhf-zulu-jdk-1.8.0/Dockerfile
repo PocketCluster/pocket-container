@@ -16,6 +16,7 @@ RUN mkdir -p /opt &&\
     rm -rf /opt/jdk/*src.zip &&\
     rm -rf /opt/jdk/man/ &&\
     rm -rf /opt/jdk/sample/ &&\
+    rm -rf /opt/jdk/demo/ &&\
     chown -R root:root /opt/jdk &&\
     /bin/bash /ezdk-1.8.0-102-java-post-install.sh &&\
     rm /ezdk-1.8.0-102-java-post-install.sh
