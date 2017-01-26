@@ -146,10 +146,10 @@ function build_hadoop_base() {
 function build_hadoop_datanode() {
 	local HADOOP_VERSION=2.6.5
 	local HADOOP_BUILD_TARGET=${PLATFORM}-hadoop-datanode-${HADOOP_VERSION}
-	_unsquashed_build ${HADOOP_BUILD_TARGET}
+	_build_squash ${HADOOP_BUILD_TARGET}
 }
 
-#build_baseimage
-#build_zulu_jdk
-#build_hadoop_base
+build_baseimage
+build_zulu_jdk
+build_hadoop_base
 build_hadoop_datanode
