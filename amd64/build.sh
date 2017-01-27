@@ -108,7 +108,7 @@ export RELEASE_TAG=latest
 function _build_squash() {
 	local BUILD_TARGET=${1}
 	local BUILD_PATH="./${1}/"
-	docker build --rm -t ${PREFIX}/${BUILD_TARGET}:${DEV_TAG} ${BUILD_PATH}
+	docker build --no-cache --rm -t ${PREFIX}/${BUILD_TARGET}:${DEV_TAG} ${BUILD_PATH}
 	docker-squash -t ${PREFIX}/${BUILD_TARGET}:${RELEASE_TAG} ${PREFIX}/${BUILD_TARGET}:${DEV_TAG}
 	docker rmi ${PREFIX}/${BUILD_TARGET}:${DEV_TAG}
 }

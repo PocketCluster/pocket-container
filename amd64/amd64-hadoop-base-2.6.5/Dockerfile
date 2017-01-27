@@ -12,12 +12,12 @@ COPY hadoop-2.6.5.tar.gz /
 
 # install openssh-server
 RUN apt-get update &&\
-	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends openssh-server net-tools &&\
+	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends net-tools &&\
 	apt-get clean -y && apt-get autoclean -y && apt-get autoremove -y &&\
 	rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 #configure ssh free key access
-RUN mkdir /var/run/sshd &&\
+RUN mkdir -p /var/run/sshd &&\
 	mkdir -p $HOME/.ssh &&\
 	mv /id_rsa* $HOME/.ssh &&\
 	cat $HOME/.ssh/id_rsa.pub >> $HOME/.ssh/authorized_keys &&\
