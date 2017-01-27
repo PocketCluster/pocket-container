@@ -1,5 +1,5 @@
 #!/usr/bin/env /bin/bash
-source ${HOME}/.bashrc
+source /root/.bashrc
 
 set -f
 
@@ -16,6 +16,3 @@ if [ "`ls -A /pocket`" == "" ]; then
   mkdir -p /pocket/hdfs/datanode
   mkdir -p /pocket/log
 fi
-
-# start sshd service
-service ssh start

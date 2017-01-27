@@ -1,5 +1,5 @@
 #!/usr/bin/env /bin/bash
-source ${HOME}/.bashrc
+source /root/.bashrc
 
 set -f
 
