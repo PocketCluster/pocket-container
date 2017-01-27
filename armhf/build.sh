@@ -117,6 +117,8 @@ function _unsquashed_build() {
 	docker build --rm -t ${PREFIX}/${BUILD_TARGET}:${DEV_TAG} ${BUILD_PATH}
 }
 
+## --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- ##
+
 function build_baseimage() {
 	local BASE_BUILD_TARGET="${PLATFORM}-baseimage"
 	_build_squash ${BASE_BUILD_TARGET}
@@ -149,7 +151,7 @@ function build_hadoop_datanode() {
 	_unsquashed_build ${HADOOP_BUILD_TARGET}
 }
 
-#build_baseimage
-#build_zulu_jdk
-#build_hadoop_base
-build_hadoop_datanode
+build_baseimage
+build_zulu_jdk
+build_hadoop_base
+#build_hadoop_datanode
