@@ -102,6 +102,48 @@ lz4:     true revision:99
 bzip2:   false
 openssl: true /usr/lib/x86_64-linux-gnu/libcrypto.so
 17/01/28 16:39:55 INFO util.ExitUtil: Exiting with status 1
+
+## --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- ##
+function build_hadoop_native_compile() {
+	local HADOOP_VERSION=2.6.5
+	local HADOOP_LIB_BUILD_TARGET=${PLATFORM}-hadoop-compile-${HADOOP_VERSION}
+	local HADOOP_LIB_BUILD_PATH="./${HADOOP_LIB_BUILD_TARGET}/"
+	local HADOOP_NATIVE_LIB_PATH=native
+	if [ ! -d "${HADOOP_LIB_BUILD_PATH}${HADOOP_NATIVE_LIB_PATH}" ]; then
+		mkdir -p "${HADOOP_LIB_BUILD_PATH}${HADOOP_NATIVE_LIB_PATH}"
+	fi
+
+	docker build --rm -t ${PREFIX}/${HADOOP_LIB_BUILD_TARGET}:${DEV_TAG} ${HADOOP_LIB_BUILD_PATH}
+	docker run -v "${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}":/${HADOOP_NATIVE_LIB_PATH} ${PREFIX}/${HADOOP_LIB_BUILD_TARGET}:${DEV_TAG}
+	pushd ${PWD}
+	cd ${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}
+	tar cvzf hadoop-native-lib-${HADOOP_VERSION}.tar.gz * 
+	popd
+	mv ${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}/hadoop-native-lib-${HADOOP_VERSION}.tar.gz ${PWD}/${PLATFORM}-hadoop-base-${HADOOP_VERSION}
+}
+
+function build_hadoop_native_base() {
+	local HADOOP_VERSION=2.6.5
+	local HADOOP_BUILD_TARGET=${PLATFORM}-hadoop-base-native-${HADOOP_VERSION}
+	local HADOOP_BUILD_PATH=./${HADOOP_BUILD_TARGET}
+	if [ ! -f "${HADOOP_BUILD_PATH}/id_rsa" ] || [ ! -f ${HADOOP_BUILD_PATH}/id_rsa.pub ]; then
+	    echo "keyfile not found. let's generate one"
+		ssh-keygen -t rsa -C "stkim1@pocketcluster.io" -f ${HADOOP_BUILD_PATH}/id_rsa -P ''	    
+	fi
+	if [[ ! -f ${HADOOP_BUILD_PATH}/hadoop-${HADOOP_VERSION}.tar.gz ]]; then
+	    echo "Apache Hadoop ${HADOOP_VERSION} not found"
+	    wget "http://mirror.apache-kr.org/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz" -P ${HADOOP_BUILD_PATH}/
+	fi
+	_build_squash ${HADOOP_BUILD_TARGET}
+}
+# please do this on very special occation where native lib compiling is needed. 
+# 1) we need to support extra compression codecs. See NATIVELIB section
+# 2) we need to packaging protobuf-2.5.0
+# 3) armhf native compile failed
+
+#build_hadoop_native_compile
+#build_hadoop_native_base
+## --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- ##
 NATIVELIB
 
 set -ex
@@ -134,28 +176,9 @@ function _unsquashed_build() {
 }
 
 ## --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- ##
-
 function build_baseimage() {
 	local BASE_BUILD_TARGET="${PLATFORM}-baseimage"
 	_build_squash ${BASE_BUILD_TARGET}
-}
-
-function build_hadoop_native_compile() {
-	local HADOOP_VERSION=2.6.5
-	local HADOOP_LIB_BUILD_TARGET=${PLATFORM}-hadoop-compile-${HADOOP_VERSION}
-	local HADOOP_LIB_BUILD_PATH="./${HADOOP_LIB_BUILD_TARGET}/"
-	local HADOOP_NATIVE_LIB_PATH=native
-	if [ ! -d "${HADOOP_LIB_BUILD_PATH}${HADOOP_NATIVE_LIB_PATH}" ]; then
-		mkdir -p "${HADOOP_LIB_BUILD_PATH}${HADOOP_NATIVE_LIB_PATH}"
-	fi
-
-	docker build --rm -t ${PREFIX}/${HADOOP_LIB_BUILD_TARGET}:${DEV_TAG} ${HADOOP_LIB_BUILD_PATH}
-	docker run -v "${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}":/${HADOOP_NATIVE_LIB_PATH} ${PREFIX}/${HADOOP_LIB_BUILD_TARGET}:${DEV_TAG}
-	pushd ${PWD}
-	cd ${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}
-	tar cvzf hadoop-native-lib-${HADOOP_VERSION}.tar.gz * 
-	popd
-	mv ${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}/hadoop-native-lib-${HADOOP_VERSION}.tar.gz ${PWD}/${PLATFORM}-hadoop-base-${HADOOP_VERSION}
 }
 
 function build_openjdk() {
@@ -186,8 +209,6 @@ function build_hadoop_namenode() {
 }
 
 #build_baseimage
-# please do this on special occation where native lib compiling is needed. ATM, we need to support extra compression codecs. See NATIVELIB section
-#build_hadoop_native_compile
 #build_openjdk
-#build_hadoop_base
+build_hadoop_base
 build_hadoop_namenode
