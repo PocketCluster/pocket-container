@@ -9,10 +9,11 @@ COPY bashrc /
 COPY config /
 COPY id_rsa* /
 COPY hadoop-2.6.5.tar.gz /
+COPY hadoop-native-lib-2.6.5.tar.gz /
 
 # install openssh-server
 RUN apt-get update &&\
-	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends net-tools &&\
+	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends net-tools libssl1.0.0 libsnappy1 &&\
 	apt-get clean -y && apt-get autoclean -y && apt-get autoremove -y &&\
 	rm -rf /var/lib/{apt,dpkg,cache,log}/
 
@@ -28,7 +29,11 @@ RUN mkdir -p /var/run/sshd &&\
 RUN tar -xzf /hadoop-2.6.5.tar.gz &&\
     rm /hadoop-2.6.5.tar.gz &&\
     mv /hadoop-2.6.5 /opt/hadoop &&\
+## move native library
+	rm /opt/hadoop/lib/native/* &&\
+	tar -xzf /hadoop-native-lib-2.6.5.tar.gz -C /opt/hadoop/lib/native &&\
 ## cleanup
+	rm /hadoop-native-lib-2.6.5.tar.gz &&\
 	rm /opt/hadoop/bin/*.cmd &&\
 	rm /opt/hadoop/sbin/*.cmd &&\
 	rm /opt/hadoop/etc/hadoop/*.cmd &&\
@@ -40,7 +45,9 @@ RUN tar -xzf /hadoop-2.6.5.tar.gz &&\
 	cp /opt/hadoop/etc/hadoop/* /etc/hadoop/ &&\
 	rm /etc/hadoop/slaves &&\
 ## base hadoop env variables	
-	mv /bashrc $HOME/.bashrc
+	mv /bashrc $HOME/.bashrc &&\
+## link libraries for native performance
+	ln -sf /usr/lib/x86_64-linux-gnu/libcrypto.so.1.0.0 /usr/lib/x86_64-linux-gnu/libcrypto.so
 
 COPY etc-hadoop/* /etc/hadoop/
 

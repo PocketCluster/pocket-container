@@ -90,6 +90,20 @@ function build_spark_driver() {
 }
 SPARK
 
+:<<NATIVELIB
+Picked up JAVA_TOOL_OPTIONS: -Djava.awt.headless=true
+17/01/28 16:39:55 WARN bzip2.Bzip2Factory: Failed to load/initialize native-bzip2 library system-native, will use pure-Java version
+17/01/28 16:39:55 INFO zlib.ZlibFactory: Successfully loaded & initialized native-zlib library
+Native library checking:
+hadoop:  true /opt/hadoop/lib/native/libhadoop.so.1.0.0
+zlib:    true /lib/x86_64-linux-gnu/libz.so.1
+snappy:  false
+lz4:     true revision:99
+bzip2:   false
+openssl: true /usr/lib/x86_64-linux-gnu/libcrypto.so
+17/01/28 16:39:55 INFO util.ExitUtil: Exiting with status 1
+NATIVELIB
+
 set -ex
 
 #pocketcluster/<architecture>-<application>-<version>:<tag>
@@ -126,6 +140,24 @@ function build_baseimage() {
 	_build_squash ${BASE_BUILD_TARGET}
 }
 
+function build_hadoop_native_compile() {
+	local HADOOP_VERSION=2.6.5
+	local HADOOP_LIB_BUILD_TARGET=${PLATFORM}-hadoop-compile-${HADOOP_VERSION}
+	local HADOOP_LIB_BUILD_PATH="./${HADOOP_LIB_BUILD_TARGET}/"
+	local HADOOP_NATIVE_LIB_PATH=native
+	if [ ! -d "${HADOOP_LIB_BUILD_PATH}${HADOOP_NATIVE_LIB_PATH}" ]; then
+		mkdir -p "${HADOOP_LIB_BUILD_PATH}${HADOOP_NATIVE_LIB_PATH}"
+	fi
+
+	docker build --rm -t ${PREFIX}/${HADOOP_LIB_BUILD_TARGET}:${DEV_TAG} ${HADOOP_LIB_BUILD_PATH}
+	docker run -v "${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}":/${HADOOP_NATIVE_LIB_PATH} ${PREFIX}/${HADOOP_LIB_BUILD_TARGET}:${DEV_TAG}
+	pushd ${PWD}
+	cd ${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}
+	tar cvzf hadoop-native-lib-${HADOOP_VERSION}.tar.gz * 
+	popd
+	mv ${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}/hadoop-native-lib-${HADOOP_VERSION}.tar.gz ${PWD}/${PLATFORM}-hadoop-base-${HADOOP_VERSION}
+}
+
 function build_openjdk() {
 	local JDK_VERSION=1.8.0
 	local JDK_BUILD_TARGET=${PLATFORM}-openjdk-${JDK_VERSION}
@@ -154,6 +186,8 @@ function build_hadoop_namenode() {
 }
 
 #build_baseimage
+# please do this on special occation where native lib compiling is needed. ATM, we need to support extra compression codecs. See NATIVELIB section
+#build_hadoop_native_compile
 #build_openjdk
 #build_hadoop_base
 build_hadoop_namenode

@@ -124,6 +124,19 @@ function build_baseimage() {
 	_build_squash ${BASE_BUILD_TARGET}
 }
 
+function build_hadoop_native_compile() {
+	local HADOOP_VERSION=2.6.5
+	local HADOOP_LIB_BUILD_TARGET=${PLATFORM}-hadoop-compile-${HADOOP_VERSION}
+	local HADOOP_LIB_BUILD_PATH="./${HADOOP_LIB_BUILD_TARGET}/"
+	local HADOOP_NATIVE_LIB_PATH=native
+	if [ ! -d "${HADOOP_LIB_BUILD_PATH}${HADOOP_NATIVE_LIB_PATH}" ]; then
+		mkdir -p "${HADOOP_LIB_BUILD_PATH}${HADOOP_NATIVE_LIB_PATH}"
+	fi
+
+	docker build --rm -t ${PREFIX}/${HADOOP_LIB_BUILD_TARGET}:${DEV_TAG} ${HADOOP_LIB_BUILD_PATH}
+	docker run -v "${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}":/${HADOOP_NATIVE_LIB_PATH} ${PREFIX}/${HADOOP_LIB_BUILD_TARGET}:${DEV_TAG}
+}
+
 function build_zulu_jdk() {
 	local JDK_VERSION=1.8.0
 	local JDK_BUILD_TARGET=${PLATFORM}-zulu-jdk-${JDK_VERSION}
@@ -152,6 +165,7 @@ function build_hadoop_datanode() {
 }
 
 #build_baseimage
+build_hadoop_native_compile
 #build_zulu_jdk
 #build_hadoop_base
-build_hadoop_datanode
+#build_hadoop_datanode
