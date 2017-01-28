@@ -135,6 +135,11 @@ function build_hadoop_native_compile() {
 
 	docker build --rm -t ${PREFIX}/${HADOOP_LIB_BUILD_TARGET}:${DEV_TAG} ${HADOOP_LIB_BUILD_PATH}
 	docker run -v "${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}":/${HADOOP_NATIVE_LIB_PATH} ${PREFIX}/${HADOOP_LIB_BUILD_TARGET}:${DEV_TAG}
+	pushd ${PWD}
+	cd ${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}
+	tar cvzf hadoop-native-lib-${HADOOP_VERSION}.tar.gz * 
+	popd
+	mv ${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}/hadoop-native-lib-${HADOOP_VERSION}.tar.gz ${PWD}/${PLATFORM}-hadoop-base-${HADOOP_VERSION}
 }
 
 function build_zulu_jdk() {
@@ -165,7 +170,8 @@ function build_hadoop_datanode() {
 }
 
 #build_baseimage
-build_hadoop_native_compile
+# please do this on special occation where native lib compiling is needed. ATM, we need to support extra compression codecs. See NATIVELIB section
+#build_hadoop_native_compile
 #build_zulu_jdk
-#build_hadoop_base
-#build_hadoop_datanode
+build_hadoop_base
+build_hadoop_datanode

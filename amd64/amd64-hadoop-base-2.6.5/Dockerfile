@@ -13,7 +13,7 @@ COPY hadoop-native-lib-2.6.5.tar.gz /
 
 # install openssh-server
 RUN apt-get update &&\
-	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends net-tools libssl1.0.0 libsnappy1 &&\
+	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends net-tools libssl1.0.0 &&\
 	apt-get clean -y && apt-get autoclean -y && apt-get autoremove -y &&\
 	rm -rf /var/lib/{apt,dpkg,cache,log}/
 
