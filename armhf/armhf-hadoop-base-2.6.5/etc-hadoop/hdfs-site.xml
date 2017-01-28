@@ -34,13 +34,13 @@
     </property>
 
     <property>
-        <name>dfs.namenode.name.dir</name>
-        <value>file:///pocket/hdfs/namenode</value>
+        <name>dfs.datanode.use.datanode.hostname</name>
+        <value>true</value>
     </property>
 
     <property>
-        <name>dfs.namenode.checkpoint.dir</name>
-        <value>file:///pocket/hdfs/namenode2-checkpoint</value>
+        <name>dfs.client.use.datanode.hostname</name>
+        <value>true</value>
     </property>
 
     <property>
