@@ -15,6 +15,7 @@ RUN mv /etc/dpkg/dpkg.cfg.d/01_nodoc ~ &&\
     mv ~/01_nodoc /etc/dpkg/dpkg.cfg.d/ &&\
 	mv ~/apt.conf /etc/apt/ &&\
 # clean documents	
+	rm -rf /usr/lib/jvm/java-8-openjdk-amd64/man || true &&\
 	rm -rf /usr/lib/jvm/java-8-openjdk-amd64/jre/man || true &&\
 	rm -rf /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/images/cursors/*.gif || true &&\
 	find /usr/share/doc -depth -type f ! -name copyright|xargs rm || true &&\
