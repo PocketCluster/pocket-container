@@ -88,6 +88,32 @@ function build_spark_slave() {
 }
 README
 
+:<<NATIVELIB
+function build_hadoop_native_compile() {
+	local HADOOP_VERSION=2.6.5
+	local HADOOP_LIB_BUILD_TARGET=${PLATFORM}-hadoop-compile-${HADOOP_VERSION}
+	local HADOOP_LIB_BUILD_PATH="./${HADOOP_LIB_BUILD_TARGET}/"
+	local HADOOP_NATIVE_LIB_PATH=native
+	if [ ! -d "${HADOOP_LIB_BUILD_PATH}${HADOOP_NATIVE_LIB_PATH}" ]; then
+		mkdir -p "${HADOOP_LIB_BUILD_PATH}${HADOOP_NATIVE_LIB_PATH}"
+	fi
+
+	docker build --rm -t ${PREFIX}/${HADOOP_LIB_BUILD_TARGET}:${DEV_TAG} ${HADOOP_LIB_BUILD_PATH}
+	docker run -v "${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}":/${HADOOP_NATIVE_LIB_PATH} ${PREFIX}/${HADOOP_LIB_BUILD_TARGET}:${DEV_TAG}
+	pushd ${PWD}
+	cd ${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}
+	tar cvzf hadoop-native-lib-${HADOOP_VERSION}.tar.gz * 
+	popd
+	mv ${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}/hadoop-native-lib-${HADOOP_VERSION}.tar.gz ${PWD}/${PLATFORM}-hadoop-base-${HADOOP_VERSION}
+}
+
+# please do this on special occation where native lib compiling is needed. 
+1) ATM, we need to support extra compression codecs. See NATIVELIB section
+2) This fails where maven tries to build hadoop doc. Skip that part
+#build_hadoop_native_compile
+NATIVELIB
+
+
 set -ex
 
 #pocketcluster/<architecture>-<application>-<version>:<tag>
@@ -124,24 +150,6 @@ function build_baseimage() {
 	_build_squash ${BASE_BUILD_TARGET}
 }
 
-function build_hadoop_native_compile() {
-	local HADOOP_VERSION=2.6.5
-	local HADOOP_LIB_BUILD_TARGET=${PLATFORM}-hadoop-compile-${HADOOP_VERSION}
-	local HADOOP_LIB_BUILD_PATH="./${HADOOP_LIB_BUILD_TARGET}/"
-	local HADOOP_NATIVE_LIB_PATH=native
-	if [ ! -d "${HADOOP_LIB_BUILD_PATH}${HADOOP_NATIVE_LIB_PATH}" ]; then
-		mkdir -p "${HADOOP_LIB_BUILD_PATH}${HADOOP_NATIVE_LIB_PATH}"
-	fi
-
-	docker build --rm -t ${PREFIX}/${HADOOP_LIB_BUILD_TARGET}:${DEV_TAG} ${HADOOP_LIB_BUILD_PATH}
-	docker run -v "${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}":/${HADOOP_NATIVE_LIB_PATH} ${PREFIX}/${HADOOP_LIB_BUILD_TARGET}:${DEV_TAG}
-	pushd ${PWD}
-	cd ${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}
-	tar cvzf hadoop-native-lib-${HADOOP_VERSION}.tar.gz * 
-	popd
-	mv ${PWD}/${HADOOP_LIB_BUILD_TARGET}/${HADOOP_NATIVE_LIB_PATH}/hadoop-native-lib-${HADOOP_VERSION}.tar.gz ${PWD}/${PLATFORM}-hadoop-base-${HADOOP_VERSION}
-}
-
 function build_zulu_jdk() {
 	local JDK_VERSION=1.8.0
 	local JDK_BUILD_TARGET=${PLATFORM}-zulu-jdk-${JDK_VERSION}
@@ -170,8 +178,6 @@ function build_hadoop_datanode() {
 }
 
 #build_baseimage
-# please do this on special occation where native lib compiling is needed. ATM, we need to support extra compression codecs. See NATIVELIB section
-#build_hadoop_native_compile
 #build_zulu_jdk
 build_hadoop_base
 build_hadoop_datanode

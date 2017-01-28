@@ -10,7 +10,7 @@ COPY config /
 COPY id_rsa* /
 COPY hadoop-2.6.5.tar.gz /
 
-# install openssh-server
+# install openssh-server related tools
 RUN apt-get update &&\
 	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends net-tools &&\
 	apt-get clean -y && apt-get autoclean -y && apt-get autoremove -y &&\

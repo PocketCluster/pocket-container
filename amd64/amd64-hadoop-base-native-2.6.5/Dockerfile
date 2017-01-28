@@ -11,11 +11,16 @@ COPY id_rsa* /
 COPY hadoop-2.6.5.tar.gz /
 COPY hadoop-native-lib-2.6.5.tar.gz /
 
-# install openssh-server
+# install ssh server related tools
 RUN apt-get update &&\
-	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends net-tools libssl1.0.0 &&\
+	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends net-tools
+
+# libcrypto, libsnappy supports	
+RUN	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libssl1.0.0 libsnappy1 &&\
 	apt-get clean -y && apt-get autoclean -y && apt-get autoremove -y &&\
-	rm -rf /var/lib/{apt,dpkg,cache,log}/
+	rm -rf /var/lib/{apt,dpkg,cache,log}/ &&\
+## link libraries for native performance
+	ln -sf /usr/lib/x86_64-linux-gnu/libcrypto.so.1.0.0 /usr/lib/x86_64-linux-gnu/libcrypto.so
 
 #configure ssh free key access
 RUN mkdir -p /var/run/sshd &&\
@@ -46,9 +51,7 @@ RUN tar -xzf /hadoop-2.6.5.tar.gz &&\
 	cp /opt/hadoop/etc/hadoop/* /etc/hadoop/ &&\
 	rm /etc/hadoop/slaves &&\
 ## base hadoop env variables	
-	mv /bashrc $HOME/.bashrc &&\
-## link libraries for native performance
-	ln -sf /usr/lib/x86_64-linux-gnu/libcrypto.so.1.0.0 /usr/lib/x86_64-linux-gnu/libcrypto.so
+	mv /bashrc $HOME/.bashrc
 
 COPY etc-hadoop/* /etc/hadoop/
 
