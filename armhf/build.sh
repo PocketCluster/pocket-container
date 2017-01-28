@@ -179,5 +179,5 @@ function build_hadoop_datanode() {
 
 #build_baseimage
 #build_zulu_jdk
-build_hadoop_base
+#build_hadoop_base
 build_hadoop_datanode

@@ -29,6 +29,8 @@ do
 	fi
 done
 
+service ssh start
+
 # check hdfs format
 if [ ! -d /pocket/hdfs/namenode ] || [ ! -d /pocket/hdfs/namenode2-checkpoint ] || [ ! -d /pocket/log ]; then
     echo "Formatting namenode name directory: /pocket"
