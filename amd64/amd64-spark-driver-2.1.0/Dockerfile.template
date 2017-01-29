@@ -6,6 +6,7 @@ USER root
 # Spark specific bashrc
 COPY bashrc /
 COPY spark-2.1.0-bin-without-hadoop.tgz /
+COPY spark-launch.sh /
 
 #install spark 2.1.0
 RUN tar -xzf /spark-2.1.0-bin-without-hadoop.tgz &&\
@@ -21,8 +22,10 @@ RUN tar -xzf /spark-2.1.0-bin-without-hadoop.tgz &&\
     mkdir -p /etc/spark &&\
 ## base spark env variables 
     cat /bashrc >> $HOME/.bashrc &&\
-    rm /bashrc
+    rm /bashrc &&\
+## set execute permission
+    chmod +x /spark-launch.sh    
 
 COPY etc-spark/* /etc/spark/
 
-EXPORT 7077 8080 8081
+EXPORT 7077 8080 8081 8090

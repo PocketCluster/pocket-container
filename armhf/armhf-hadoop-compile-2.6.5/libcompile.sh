@@ -4,7 +4,7 @@
 #echo 'deb http://http.debian.net/debian jessie-backports main' >> /etc/apt/sources.list &&\
 apt-get update
 apt-get install -y build-essential g++ autoconf automake libtool cmake zlib1g-dev pkg-config libssl-dev maven curl autoconf
-apt-get install -y libprotobuf9 libprotobuf-devlibprotobuf-java
+#apt-get install -y libprotobuf-lite9 libprotobuf9 protobuf-compiler libprotobuf-java libprotobuf-dev
 apt-get clean -y && apt-get autoclean -y && apt-get autoremove -y
 
 ## install java 1.8.0
@@ -15,7 +15,6 @@ mkdir -p /opt &&\
 
 export JAVA_HOME="/opt/jdk"
 
-:<<COMPILE_PROTOBUF
 # extract protobuf-2.5.0 and install
 tar xvzf /protobuf-src-2.5.0.tar.gz -C /tmp &&
 # extract gtest and embed in protobuf
@@ -27,14 +26,20 @@ tar xvzf /protobuf-src-2.5.0.tar.gz -C /tmp &&
     make &&\
     make check &&\
     make install &&\
+    ldconfig &&\
     protoc --version &&\
     cd java &&\
     mvn install &&\
     mvn package -DskipTests
-COMPILE_PROTOBUF
+
+# copy the whiole directory for packaging
+cp -rf /tmp/protobuf-2.5.0/* /protobuf-native/
 
 # build hadoop lib and copy the library
 tar xvzf /hadoop-2.6.5-src.tar.gz -C /tmp &&\
     cd /tmp/hadoop-2.6.5-src &&\
-    mvn package -Pdist,native -DskipTests -Dtar &&\
-    cp -rf /tmp/hadoop-2.6.5-src/hadoop-dist/target/hadoop-2.6.5/lib/native/* /native/
+#    mvn package -Pdist,native -DskipTests -Dtar &&\
+    mvn clean package -Pdist,native -DskipTests -Dtar -Dmaven.javadoc.skip=true
+
+# copy the compiled lib for packaging
+cp -rf /tmp/hadoop-2.6.5-src/hadoop-dist/target/hadoop-2.6.5/lib/native/* /hadoop-native/
