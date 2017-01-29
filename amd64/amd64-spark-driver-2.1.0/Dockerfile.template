@@ -1,0 +1,28 @@
+FROM pocketcluster/amd64-hadoop-namenode-2.6.5:BUILDCHAINTAG
+MAINTAINER PocketCluster <stkim1@pocketcluster.io>
+
+USER root
+
+# Spark specific bashrc
+COPY bashrc /
+COPY spark-2.1.0-bin-without-hadoop.tgz /
+
+#install spark 2.1.0
+RUN tar -xzf /spark-2.1.0-bin-without-hadoop.tgz &&\
+    rm /spark-2.1.0-bin-without-hadoop.tgz &&\
+    mv /spark-2.1.0-bin-without-hadoop /opt/spark &&\
+## cleanup
+    rm /opt/spark/bin/*.cmd &&\
+    rm -rf /opt/spark/data &&\
+    rm -rf /opt/spark/examples &&\
+    rm -rf /opt/spark/python/docs &&\
+    rm -rf /opt/spark/python/test_support &&\
+## setup
+    mkdir -p /etc/spark &&\
+## base spark env variables 
+    cat /bashrc >> $HOME/.bashrc &&\
+    rm /bashrc
+
+COPY etc-spark/* /etc/spark/
+
+EXPORT 7077 8080 8081

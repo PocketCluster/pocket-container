@@ -1,4 +1,4 @@
-FROM pocketcluster/armhf-baseimage:latest
+FROM armhf/debian:stable
 MAINTAINER PocketCluster <stkim1@pocketcluster.io>
 
 # ROOT USER

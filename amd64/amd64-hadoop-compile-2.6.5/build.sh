@@ -148,80 +148,27 @@ export PLATFORM=amd64
 export DEV_TAG=dev
 export RELEASE_TAG=latest
 
-function _build_squash() {
-	local BUILD_TARGET=${1}
-	local BUILD_PATH="./${1}/"
-	docker build --no-cache --rm -t ${PREFIX}/${BUILD_TARGET}:${DEV_TAG} ${BUILD_PATH}
-	docker-squash -t ${PREFIX}/${BUILD_TARGET}:${RELEASE_TAG} ${PREFIX}/${BUILD_TARGET}:${DEV_TAG}
-	docker rmi ${PREFIX}/${BUILD_TARGET}:${DEV_TAG}
-}
+# please do this on very special occation where native lib compiling is needed. 
+# 1) we need to support extra compression codecs. See NATIVELIB section
+# 2) we need to packaging protobuf-2.5.0
+# 3) armhf native compile failed
 
-function _unsquashed_build() {
-	local BUILD_TARGET=${1}
-	local BUILD_PATH=./${1}/
-	docker build --rm -t ${PREFIX}/${BUILD_TARGET}:${DEV_TAG} ${BUILD_PATH}
-}
-
-## --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- x --- ##
-function build_baseimage() {
-	local BASE_BUILD_TARGET="${PLATFORM}-baseimage"
-	_build_squash ${BASE_BUILD_TARGET}
-}
-
-function build_openjdk() {
-	local JDK_VERSION=1.8.0
-	local JDK_BUILD_TARGET=${PLATFORM}-openjdk-${JDK_VERSION}
-	_build_squash ${JDK_BUILD_TARGET}
-}
-
-function build_hadoop_base() {
+function build_hadoop_native_compile() {
 	local HADOOP_VERSION=2.6.5
-	local HADOOP_BUILD_TARGET=${PLATFORM}-hadoop-base-${HADOOP_VERSION}
-	local HADOOP_BUILD_PATH=./${HADOOP_BUILD_TARGET}
-	if [ ! -f "${HADOOP_BUILD_PATH}/id_rsa" ] || [ ! -f ${HADOOP_BUILD_PATH}/id_rsa.pub ]; then
-	    echo "keyfile not found. let's generate one"
-		ssh-keygen -t rsa -C "stkim1@pocketcluster.io" -f ${HADOOP_BUILD_PATH}/id_rsa -P ''	    
+	local HADOOP_LIB_BUILD_TARGET=${PLATFORM}-hadoop-compile-${HADOOP_VERSION}
+	local HADOOP_LIB_BUILD_PATH="./${HADOOP_LIB_BUILD_TARGET}/"
+	local HADOOP_NATIVE_LIB_PATH=native
+	if [ ! -d "./${HADOOP_NATIVE_LIB_PATH}" ]; then
+		mkdir -p "./${HADOOP_NATIVE_LIB_PATH}"
 	fi
-	if [[ ! -f ${HADOOP_BUILD_PATH}/hadoop-${HADOOP_VERSION}.tar.gz ]]; then
-	    echo "Apache Hadoop ${HADOOP_VERSION} not found"
-	    wget "http://mirror.apache-kr.org/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz" -P ${HADOOP_BUILD_PATH}/
-	fi
-	_build_squash ${HADOOP_BUILD_TARGET}
+
+	docker build --rm -t ${PREFIX}/${HADOOP_LIB_BUILD_TARGET}:${DEV_TAG} .
+	docker run -v "${PWD}/${HADOOP_NATIVE_LIB_PATH}":/${HADOOP_NATIVE_LIB_PATH} ${PREFIX}/${HADOOP_LIB_BUILD_TARGET}:${DEV_TAG}
+	pushd ${PWD}
+	cd ${PWD}/${HADOOP_NATIVE_LIB_PATH}
+	tar cvzf hadoop-native-lib-${HADOOP_VERSION}.tar.gz * 
+	popd
+	mv ${PWD}/${HADOOP_NATIVE_LIB_PATH}/hadoop-native-lib-${HADOOP_VERSION}.tar.gz ..
 }
 
-function build_hadoop_namenode() {
-	local HADOOP_VERSION=2.6.5
-	local HADOOP_BUILD_TARGET=${PLATFORM}-hadoop-namenode-${HADOOP_VERSION}
-	_unsquashed_build ${HADOOP_BUILD_TARGET}
-}
-
-function build_spark_driver() {
-	local HADOOP_VERSION=2.6.5
-	local HADOOP_BUILD_TARGET=${PLATFORM}-hadoop-namenode-${HADOOP_VERSION}
-	_unsquashed_build ${HADOOP_BUILD_TARGET}
-}
-
-function build_spark_driver() { 
-	local SHOULD_SQUASH=${1}
-	local SPARK_VERSION=2.1.0
-	local SPARK_BUILD_TARGET=${PLATFORM}-spark-driver-${SPARK_VERSION}
-	local SPARK_BUILD_PATH=./${SPARK_BUILD_TARGET}
-    if [[ ! -f ${SPARK_BUILD_PATH}/spark-2.1.0-bin-without-hadoop.tgz ]]; then
-        echo "Apache Spark 2.6.5 not found"
-        wget "http://mirror.apache-kr.org/spark/spark-2.1.0/spark-2.1.0-bin-without-hadoop.tgz" -P ${SPARK_BUILD_PATH}/
-    fi
-	if [ ${SHOULD_SQUASH} -eq 1 ]; then
-		sed 's/BUILDCHAINTAG/latest/g' ${SPARK_BUILD_PATH}/Dockerfile.template > ${SPARK_BUILD_PATH}/Dockerfile
-		_build_squash ${SPARK_BUILD_TARGET}
-	else
-		sed 's/BUILDCHAINTAG/dev/g' ${SPARK_BUILD_PATH}/Dockerfile.template > ${SPARK_BUILD_PATH}/Dockerfile
-		_unsquashed_build ${SPARK_BUILD_TARGET}
-	fi
-	rm ${SPARK_BUILD_PATH}/Dockerfile
-}
-
-#build_baseimage
-#build_openjdk
-#build_hadoop_base
-#build_hadoop_namenode
-build_spark_driver 0
+build_hadoop_native_compile
