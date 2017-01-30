@@ -29,9 +29,7 @@ do
 	fi
 done
 
-service ssh start
-
-# check hdfs format
+# check spark directories
 if [ ! -d /pocket/spark/tmp ] || [ ! -d /pocket/spark/log ]; then
     echo "Formatting namenode name directory: /pocket/spark"
     mkdir -p /pocket/spark/tmp

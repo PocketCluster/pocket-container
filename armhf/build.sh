@@ -157,6 +157,7 @@ function build_zulu_jdk() {
 }
 
 function build_hadoop_base() {
+	local SHOULD_SQUASH=${1}
 	local HADOOP_VERSION=2.6.5
 	local HADOOP_BUILD_TARGET=${PLATFORM}-hadoop-base-${HADOOP_VERSION}
 	local HADOOP_BUILD_PATH=./${HADOOP_BUILD_TARGET}
@@ -168,16 +169,50 @@ function build_hadoop_base() {
 	    echo "Apache Hadoop ${HADOOP_VERSION} not found"
 	    wget "http://mirror.apache-kr.org/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz" -P ${HADOOP_BUILD_PATH}/
 	fi
-	_build_squash ${HADOOP_BUILD_TARGET}
+	if [ ${SHOULD_SQUASH} -eq 1 ]; then
+		_build_squash ${HADOOP_BUILD_TARGET} || true
+	else
+		_unsquashed_build ${HADOOP_BUILD_TARGET} || true
+	fi
 }
 
 function build_hadoop_datanode() {
+	local SHOULD_SQUASH=${1}
 	local HADOOP_VERSION=2.6.5
 	local HADOOP_BUILD_TARGET=${PLATFORM}-hadoop-datanode-${HADOOP_VERSION}
-	_unsquashed_build ${HADOOP_BUILD_TARGET}
+	local HADOOP_BUILD_PATH=./${HADOOP_BUILD_TARGET}
+	if [ ${SHOULD_SQUASH} -eq 1 ]; then
+		sed 's/BUILDCHAINTAG/latest/g' ${HADOOP_BUILD_PATH}/Dockerfile.template > ${HADOOP_BUILD_PATH}/Dockerfile
+		_build_squash ${HADOOP_BUILD_TARGET} || true
+	else
+		sed 's/BUILDCHAINTAG/dev/g' ${HADOOP_BUILD_PATH}/Dockerfile.template > ${HADOOP_BUILD_PATH}/Dockerfile
+		_unsquashed_build ${HADOOP_BUILD_TARGET} || true
+	fi
+	rm ${HADOOP_BUILD_TARGET}/Dockerfile
 }
+
+function build_spark_slave() {
+	local SHOULD_SQUASH=${1}
+	local SPARK_VERSION=2.1.0
+	local SPARK_BUILD_TARGET=${PLATFORM}-spark-slaves-${SPARK_VERSION}
+	local SPARK_BUILD_PATH=./${SPARK_BUILD_TARGET}
+    if [[ ! -f ${SPARK_BUILD_PATH}/spark-2.1.0-bin-without-hadoop.tgz ]]; then
+        echo "Apache Spark 2.6.5 not found"
+        wget "http://mirror.apache-kr.org/spark/spark-2.1.0/spark-2.1.0-bin-without-hadoop.tgz" -P ${SPARK_BUILD_PATH}/
+    fi
+	if [ ${SHOULD_SQUASH} -eq 1 ]; then
+		sed 's/BUILDCHAINTAG/latest/g' ${SPARK_BUILD_PATH}/Dockerfile.template > ${SPARK_BUILD_PATH}/Dockerfile
+		_build_squash ${SPARK_BUILD_TARGET} || true
+	else
+		sed 's/BUILDCHAINTAG/dev/g' ${SPARK_BUILD_PATH}/Dockerfile.template > ${SPARK_BUILD_PATH}/Dockerfile
+		_unsquashed_build ${SPARK_BUILD_TARGET} || true
+	fi
+	rm ${SPARK_BUILD_PATH}/Dockerfile
+}
+
 
 #build_baseimage
 #build_zulu_jdk
-#build_hadoop_base
-build_hadoop_datanode
+build_hadoop_base 0
+build_hadoop_datanode 0
+build_spark_slave 0

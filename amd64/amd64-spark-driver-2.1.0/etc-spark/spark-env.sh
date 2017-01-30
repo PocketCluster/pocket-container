@@ -6,7 +6,7 @@ export JAVA_HOME=${JAVA_HOME}
 # To point Spark towards Hadoop configuration files
 export HADOOP_CONF_DIR="/etc/hadoop"
 # To set the IP address Spark binds to on this node
-export SPARK_LOCAL_IP="pc-core"
+export SPARK_LOCAL_IP=${HOSTNAME}
 # To set the public dns name of the driver program
 #SPARK_PUBLIC_DNS
 # Default classpath entries to append
