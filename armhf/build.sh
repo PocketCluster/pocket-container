@@ -194,7 +194,7 @@ function build_hadoop_datanode() {
 function build_spark_slave() {
 	local SHOULD_SQUASH=${1}
 	local SPARK_VERSION=2.1.0
-	local SPARK_BUILD_TARGET=${PLATFORM}-spark-slaves-${SPARK_VERSION}
+	local SPARK_BUILD_TARGET=${PLATFORM}-spark-slave-${SPARK_VERSION}
 	local SPARK_BUILD_PATH=./${SPARK_BUILD_TARGET}
     if [[ ! -f ${SPARK_BUILD_PATH}/spark-2.1.0-bin-without-hadoop.tgz ]]; then
         echo "Apache Spark 2.6.5 not found"
@@ -213,6 +213,6 @@ function build_spark_slave() {
 
 #build_baseimage
 #build_zulu_jdk
-build_hadoop_base 0
-build_hadoop_datanode 0
+#build_hadoop_base 0
+#build_hadoop_datanode 0
 build_spark_slave 0
