@@ -1,4 +1,4 @@
-FROM pocket/armhf-hadoop-datanode-2.6.5:BUILDCHAINTAG
+FROM pocketcluster/armhf-hadoop-datanode-2.6.5:BUILDCHAINTAG
 MAINTAINER PocketCluster <stkim1@pocketcluster.io>
 
 USER root
