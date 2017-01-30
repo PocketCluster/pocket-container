@@ -32,11 +32,11 @@ done
 service ssh start
 
 # check hdfs format
-if [ ! -d /pocket/hdfs/namenode ] || [ ! -d /pocket/hdfs/namenode2-checkpoint ] || [ ! -d /pocket/log ]; then
+if [ ! -d /pocket/hadoop/hdfs/namenode ] || [ ! -d /pocket/hadoop/hdfs/namenode2-checkpoint ] || [ ! -d /pocket/hadoop/log ]; then
     echo "Formatting namenode name directory: /pocket"
-    mkdir -p /pocket/hdfs/namenode
-    mkdir -p /pocket/hdfs/namenode2-checkpoint
-    mkdir -p /pocket/log
+    mkdir -p /pocket/hadoop/hdfs/namenode
+    mkdir -p /pocket/hadoop/hdfs/namenode2-checkpoint
+    mkdir -p /pocket/hadoop/log
     ${HADOOP_HOME}/bin/hdfs --config ${HADOOP_CONF_DIR} namenode -format ${CLUSTER_NAME}
 fi
 

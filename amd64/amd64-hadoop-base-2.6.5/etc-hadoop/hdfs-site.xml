@@ -65,12 +65,12 @@
 
     <property>
         <name>dfs.namenode.name.dir</name>
-        <value>file:///pocket/hdfs/namenode</value>
+        <value>file:///pocket/hadoop/hdfs/namenode</value>
     </property>
 
     <property>
         <name>dfs.namenode.checkpoint.dir</name>
-        <value>file:///pocket/hdfs/namenode2-checkpoint</value>
+        <value>file:///pocket/hadoop/hdfs/namenode2-checkpoint</value>
     </property>
 
     <property>

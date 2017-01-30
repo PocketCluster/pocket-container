@@ -7,7 +7,7 @@
 - [HOST] Let /pocket/<application>/<version>/ be the top directory to store
 
 [HOST] /pocket/hadoop/2.6.5/
-[CONT]              /pocket/
+[CONT]       /pocket/hadoop/
 
 - [HOST] PATH
 	# namenode path
@@ -28,20 +28,17 @@
 	/etc/hadoop
 
 	# namenode path
-	/pocket/hdfs/namenode
-	/pocket/hdfs/namenode2-checkpoint
-	/pocket/hdfs/datanode
-	/pocket/hdfs/yarn/nm-local-dir
-	/pocket/hdfs/yarn/nm-log-dir/userlogs
+	/pocket/hadoop/hdfs/namenode
+	/pocket/hadoop/hdfs/namenode2-checkpoint
+	/pocket/hadoop/hdfs/yarn/nm-local-dir
+	/pocket/hadoop/hdfs/yarn/nm-log-dir/userlogs
 
 	# log file path
-	/pocket/log
-
-
+	/pocket/hadoop/log
 
 2. [CONT] copy /opt/hadoop/etc/hadood to /etc/hadoop
 3. [CONT] mount hadoop log directory created at host so log can be permanant (should it be?)
-	export HADOOP_LOG_DIR="/pocket/log"
+	export HADOOP_LOG_DIR="/pocket/hadoop/log"
 
 4. [CONT] Check if headless option is required
 	export JAVA_TOOL_OPTIONS='-Djava.awt.headless=true'
@@ -51,7 +48,7 @@
 --- x --- x --- x --- x --- x --- x --- x --- x --- SPARK 2.1.0 --- x --- x --- x --- x --- x --- x --- x --- x --- x ---
 
 [HOST] /pocket/spark/2.1.0/
-[CONT]              /pocket/
+[CONT]       /pocket/spark/
 
 - [HOST] PATH
 	# log file path

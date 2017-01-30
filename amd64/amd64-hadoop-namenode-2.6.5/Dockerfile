@@ -8,7 +8,7 @@ USER root
 RUN rm -f /etc/service/sshd/down
 
 # Prepare files
-COPY launch.sh /etc/my_init.d/01_launch_hadoop
+COPY hadoo-launch.sh /etc/my_init.d/01_launch_hadoop
 RUN chmod a+x /etc/my_init.d/01_launch_hadoop
 
 CMD ["/sbin/my_init"]
