@@ -24,7 +24,7 @@ RUN tar -xzf /spark-2.1.0-bin-without-hadoop.tgz &&\
     cat /bashrc >> $HOME/.bashrc &&\
     rm /bashrc &&\
 ## set execute permission
-    chmod a+x /etc/my_init.d/02_launch_spark
+    chmod a+x /etc/my_init.d/02-spark-launch.sh
 
 COPY etc-spark/* /etc/spark/
 

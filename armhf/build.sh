@@ -211,8 +211,8 @@ function build_spark_slave() {
 }
 
 
-#build_baseimage
-#build_zulu_jdk
-#build_hadoop_base 0
-#build_hadoop_datanode 0
+build_baseimage
+build_zulu_jdk
+build_hadoop_base 0
+build_hadoop_datanode 0
 build_spark_slave 0
