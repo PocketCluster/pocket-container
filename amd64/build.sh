@@ -226,7 +226,7 @@ function build_spark_driver() {
 }
 
 build_baseimage
-#build_openjdk
-#build_hadoop_base 0 
-#build_hadoop_namenode 0
+build_openjdk
+build_hadoop_base 0 
+build_hadoop_namenode 0
 #build_spark_driver 0
