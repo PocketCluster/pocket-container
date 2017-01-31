@@ -5,7 +5,7 @@ USER root
 
 # Spark specific bashrc
 COPY bashrc /
-COPY spark-launch.sh /etc/my_init.d/02_launch_spark
+COPY spark-launch.sh /etc/my_init.d/02-spark-launch.sh
 COPY spark-2.1.0-bin-without-hadoop.tgz /
 
 #install spark 2.1.0

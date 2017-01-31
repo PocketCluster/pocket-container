@@ -1,7 +1,7 @@
 #!/usr/bin/env /bin/bash
 source /root/.bashrc
 
-set -f
+set -ef
 
 HADOOP_SLAVE="/etc/hadoop/slaves"
 
