@@ -323,6 +323,9 @@ def main(args):
 				raise
 		sys.exit(exit_status)
 	finally:
+		# before runit goes out of window, stop services
+		run_pre_exit_files()
+		
 		if not args.skip_runit:
 			shutdown_runit_services()
 			if not runit_exited:

@@ -29,33 +29,22 @@ rm -rf /var/cache/debconf/*-old
 rm -rf /var/lib/apt/lists/*
 rm -rf /var/lib/cache/*
 rm -rf /var/lib/log/*
-
-## remove installer specific
-rm -rf /bd_build
-
-# slash rest of residue
-rm -rf /tmp/* 
-rm -rf /var/tmp/*
-#rm -f /etc/ssh/ssh_host_*
+rm -rf /var/cache/apt/pkgcache.bin
+rm -rf /var/cache/apt/srcpkgcache.bin
 
 # remove docs and man instead of brueforce removal, let's left copyright notices
 find /usr/share/doc -depth -type f ! -name copyright|xargs rm || true
 find /usr/share/doc -empty|xargs rmdir || true
 rm -rf /usr/share/man/* /usr/share/groff/* /usr/share/info/*
 rm -rf /usr/share/lintian/* /usr/share/linda/* /var/cache/man/*
-mkdir -p /usr/share/info
-
 # remove auto-completion
 rm -rf /usr/share/zsh/vendor-completions/*
 rm -rf /usr/share/bash-completion/completions/*
-
-# Clean up old firmware and modules
-rm -f /boot/.firmware_revision || true
-rm -rf /boot.bak || true
-
-# non-existent at this poin
-rm -rf /lib/modules.bak || true
+mkdir -p /usr/share/info
 
 # Potentially sensitive.
 rm -f /root/.bash_history
 rm -f /root/.ssh/known_hosts
+
+## remove installer specific
+rm -rf /bd_build
