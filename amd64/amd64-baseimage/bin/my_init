@@ -263,16 +263,9 @@ def wait_for_runit_services():
 			# services.
 			shutdown_runit_services(True)
 
-def install_insecure_key():
-	info("Installing insecure SSH key for user root")
-	run_command_killable("/usr/sbin/enable_insecure_key")
-
 def main(args):
 	import_envvars(False, False)
 	export_envvars()
-
-	if args.enable_insecure_key:
-		install_insecure_key()
 
 	if not args.skip_startup_files:
 		run_startup_files()
