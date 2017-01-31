@@ -2,7 +2,7 @@ version: '2'
 
 services:
   namenode:
-    image: pocketcluster/amd64-hadoop-namenode-2.6.5:dev
+    image: pocketcluster/amd64-spark-driver-2.1.0:dev
 #    pid: "host"
     container_name: pc-core
     hostname: pc-core
@@ -10,40 +10,41 @@ services:
       hadoop:
         ipv4_address: 172.16.128.1
     volumes:
-      - /pocket/hadoop/2.6.5:/pocket
+      - /pocket/hadoop/2.6.5:/pocket/hadoop
+      - /pocket/spark/2.1.0:/pocket/spark
     environment:
       - CLUSTER_NAME=pocketcluster/hadoop-2.6.5
       - SLAVE_NODES=pc-node1=172.16.128.2;pc-node2=172.16.128.3
       - constraint:node==pc-core
-#    env_file:
-#      - ./hadoop.env
     depends_on:
       - datanode1
       - datanode2
       
   datanode1:
-    image: pocketcluster/armhf-hadoop-datanode-2.6.5:dev
+    image: pocketcluster/armhf-spark-slave-2.1.0:dev
     container_name: pc-node1
     hostname: pc-node1
     networks:
       hadoop:
         ipv4_address: 172.16.128.2
     volumes:
-      - /pocket/hadoop/2.6.5:/pocket
+      - /pocket/hadoop/2.6.5:/pocket/hadoop
+      - /pocket/spark/2.1.0:/pocket/spark
     environment:
       - constraint:node==pocket
 
   datanode2:
-    image: pocketcluster/armhf-hadoop-datanode-2.6.5:dev
+    image: pocketcluster/armhf-spark-slave-2.1.0:dev
     container_name: pc-node2
     hostname: pc-node2
     networks:
       hadoop:
         ipv4_address: 172.16.128.3
     volumes:
-      - /pocket/hadoop/2.6.5:/pocket
+      - /pocket/hadoop/2.6.5:/pocket/hadoop
+      - /pocket/spark/2.1.0:/pocket/spark
     environment:
-      - constraint:node==rpi2
+      - constraint:node==pocket-node
 
 networks:
   hadoop:
