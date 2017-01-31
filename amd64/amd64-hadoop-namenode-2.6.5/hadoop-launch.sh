@@ -29,7 +29,7 @@ do
 	fi
 done
 
-service ssh start
+#service ssh start
 
 # check hdfs format
 if [ ! -d /pocket/hadoop/hdfs/namenode ] || [ ! -d /pocket/hadoop/hdfs/namenode2-checkpoint ] || [ ! -d /pocket/hadoop/log ]; then
