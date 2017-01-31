@@ -210,7 +210,6 @@ function build_spark_slave() {
 	rm ${SPARK_BUILD_PATH}/Dockerfile
 }
 
-
 build_baseimage
 build_zulu_jdk
 build_hadoop_base 0

@@ -11,6 +11,8 @@ export SPARK_LOCAL_IP=${HOSTNAME}
 #SPARK_PUBLIC_DNS
 # Default classpath entries to append
 #SPARK_CLASSPATH
+# To include Hadoop’s package jars
+export SPARK_DIST_CLASSPATH="/etc/hadoop:/opt/hadoop/share/hadoop/common/lib/*:/opt/hadoop/share/hadoop/common/*:/opt/hadoop/share/hadoop/hdfs:/opt/hadoop/share/hadoop/hdfs/lib/*:/opt/hadoop/share/hadoop/hdfs/*:/opt/hadoop/share/hadoop/yarn/lib/*:/opt/hadoop/share/hadoop/yarn/*:/opt/hadoop/share/hadoop/mapreduce/lib/*:/opt/hadoop/share/hadoop/mapreduce/*:/opt/hadoop/contrib/capacity-scheduler/*.jar"
 
 ### Options read by executors and drivers running inside the cluster ###
 # Storage directories to use on this node for shuffle and RDD data
