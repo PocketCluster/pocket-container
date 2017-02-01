@@ -22,6 +22,8 @@ RUN mkdir -p /var/run/sshd &&\
 	mv /id_rsa* $HOME/.ssh &&\
 	cat $HOME/.ssh/id_rsa.pub >> $HOME/.ssh/authorized_keys &&\
 	mv /config $HOME/.ssh/config &&\
+	chmod 0700 $HOME/.ssh &&\
+	chmod 0600 $HOME/.ssh/* &&\
 	sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
 #install hadoop 2.6.5
