@@ -36,4 +36,7 @@ if [ ! -d /pocket/spark/tmp ] || [ ! -d /pocket/spark/log ]; then
     mkdir -p /pocket/spark/log
 fi
 
-${SPARK_HOME}/sbin/start-all.sh
+${SPARK_HOME}/sbin/start-master.sh
+sleep 2
+${SPARK_HOME}/sbin/start-slaves.sh
+sleep 2
