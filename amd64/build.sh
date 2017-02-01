@@ -225,6 +225,7 @@ function build_spark_driver() {
 	rm ${SPARK_BUILD_PATH}/Dockerfile
 }
 
+
 build_baseimage
 build_openjdk
 build_hadoop_base 0 
