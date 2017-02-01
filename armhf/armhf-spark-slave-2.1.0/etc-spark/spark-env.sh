@@ -25,7 +25,8 @@ export SPARK_MASTER_HOST="pc-core"
 export SPARK_MASTER_PORT=7077
 export SPARK_MASTER_WEBUI_PORT=8080
 # To set config properties only for the master (e.g. "-Dx=y")
-export SPARK_MASTER_OPTS="${SPARK_MASTER_OPTS} -Djava.awt.headless=true"
+export SPARK_MASTER_OPTS="${SPARK_MASTER_OPTS} -Djava.awt.headless=true -Dspark.ui.port=4040 -Dspark.driver.port=7001 -Dspark.fileserver.port=7002 -Dspark.broadcast.port=7003 -Dspark.replClassServer.port=7004 -Dspark.driver.blockManager.port=7005 -Dspark.blockManager.port=7005 -Dspark.executor.port=7006 -Dspark.broadcast.factory=org.apache.spark.broadcast.HttpBroadcastFactory"
+
 # To set the number of cores to use on this machine (Default: all available cores)
 export SPARK_WORKER_CORES=4
 # To set how much total memory workers have to give executors (e.g. 1000m, 2g)
@@ -39,7 +40,8 @@ export SPARK_WORKER_INSTANCES=1
 # To set the working directory of worker processes
 export SPARK_WORKER_DIR="/pocket/spark/tmp"
 # To set config properties only for the worker (e.g. "-Dx=y")
-export SPARK_WORKER_OPTS="${SPARK_WORKER_OPTS} -Djava.awt.headless=true"
+export SPARK_WORKER_OPTS="${SPARK_WORKER_OPTS} -Djava.awt.headless=true -Dspark.ui.port=4040 -Dspark.driver.port=7001 -Dspark.fileserver.port=7002 -Dspark.broadcast.port=7003 -Dspark.replClassServer.port=7004 -Dspark.driver.blockManager.port=7005 -Dspark.blockManager.port=7005 -Dspark.executor.port=7006 -Dspark.broadcast.factory=org.apache.spark.broadcast.HttpBroadcastFactory"
+
 # To allocate to the master, worker and history server themselves (default: 1g).
 export SPARK_DAEMON_MEMORY=250m
 # To set config properties only for the history server (e.g. "-Dx=y")
