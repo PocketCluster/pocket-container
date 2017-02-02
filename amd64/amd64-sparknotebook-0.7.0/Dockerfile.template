@@ -1,0 +1,13 @@
+FROM pocketcluster/amd64-spark-driver-2.1.0:BUILDCHAINTAG
+MAINTAINER PocketCluster <stkim1@pocketcluster.io>
+
+COPY spark-notebook-0.7.0-scala-2.11.8-spark-2.1.0-hadoop-2.7.3.tar /
+
+RUN tar -xvf /spark-notebook-0.7.0-scala-2.11.8-spark-2.1.0-hadoop-2.7.3.tar &&\
+    mv /spark-notebook-0.7.0-scala-2.11.8-spark-2.1.0-hadoop-2.7.3 /opt/spark-notebook &&\
+## Cleanup
+    rm /spark-notebook-0.7.0-scala-2.11.8-spark-2.1.0-hadoop-2.7.3.tar || true &&\
+    rm -rf /opt/spark-notebook/bin/spark-notebook.bat || true &&\
+#    rm -rf /opt/spark-notebook/share/doc || true &&\
+## Change ownership
+    chown -R root:root /opt/spark-notebook

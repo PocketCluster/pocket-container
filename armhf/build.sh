@@ -196,9 +196,9 @@ function build_spark_slave() {
 	local SPARK_VERSION=2.1.0
 	local SPARK_BUILD_TARGET=${PLATFORM}-spark-slave-${SPARK_VERSION}
 	local SPARK_BUILD_PATH=./${SPARK_BUILD_TARGET}
-    if [[ ! -f ${SPARK_BUILD_PATH}/spark-2.1.0-bin-without-hadoop.tgz ]]; then
-        echo "Apache Spark 2.6.5 not found"
-        wget "http://mirror.apache-kr.org/spark/spark-2.1.0/spark-2.1.0-bin-without-hadoop.tgz" -P ${SPARK_BUILD_PATH}/
+    if [[ ! -f ${SPARK_BUILD_PATH}/spark-${SPARK_VERSION}-bin-without-hadoop.tgz ]]; then
+        echo "Apache Spark ${SPARK_VERSION} not found"
+        wget "http://mirror.apache-kr.org/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-without-hadoop.tgz" -P ${SPARK_BUILD_PATH}/
     fi
 	if [ ${SHOULD_SQUASH} -eq 1 ]; then
 		sed 's/BUILDCHAINTAG/latest/g' ${SPARK_BUILD_PATH}/Dockerfile.template > ${SPARK_BUILD_PATH}/Dockerfile
@@ -210,8 +210,8 @@ function build_spark_slave() {
 	rm ${SPARK_BUILD_PATH}/Dockerfile
 }
 
-#build_baseimage
-#build_zulu_jdk
+build_baseimage
+build_zulu_jdk
 build_hadoop_base 0
 build_hadoop_datanode 0
 build_spark_slave 0
