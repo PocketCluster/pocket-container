@@ -158,7 +158,7 @@ function build_zulu_jdk() {
 
 function build_hadoop_base() {
 	local SHOULD_SQUASH=${1}
-	local HADOOP_VERSION=2.6.5
+	local HADOOP_VERSION=2.7.3
 	local HADOOP_BUILD_TARGET=${PLATFORM}-hadoop-base-${HADOOP_VERSION}
 	local HADOOP_BUILD_PATH=./${HADOOP_BUILD_TARGET}
 	if [ ! -f "${HADOOP_BUILD_PATH}/id_rsa" ] || [ ! -f ${HADOOP_BUILD_PATH}/id_rsa.pub ]; then
@@ -178,7 +178,7 @@ function build_hadoop_base() {
 
 function build_hadoop_datanode() {
 	local SHOULD_SQUASH=${1}
-	local HADOOP_VERSION=2.6.5
+	local HADOOP_VERSION=2.7.3
 	local HADOOP_BUILD_TARGET=${PLATFORM}-hadoop-datanode-${HADOOP_VERSION}
 	local HADOOP_BUILD_PATH=./${HADOOP_BUILD_TARGET}
 	if [ ${SHOULD_SQUASH} -eq 1 ]; then
@@ -210,8 +210,8 @@ function build_spark_slave() {
 	rm ${SPARK_BUILD_PATH}/Dockerfile
 }
 
-build_baseimage
-build_zulu_jdk
+#build_baseimage
+#build_zulu_jdk
 build_hadoop_base 0
 build_hadoop_datanode 0
 build_spark_slave 0

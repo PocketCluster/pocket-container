@@ -173,7 +173,7 @@ function build_openjdk() {
 
 function build_hadoop_base() {
 	local SHOULD_SQUASH=${1}
-	local HADOOP_VERSION=2.6.5
+	local HADOOP_VERSION=2.7.3
 	local HADOOP_BUILD_TARGET=${PLATFORM}-hadoop-base-${HADOOP_VERSION}
 	local HADOOP_BUILD_PATH=./${HADOOP_BUILD_TARGET}
 	if [ ! -f "${HADOOP_BUILD_PATH}/id_rsa" ] || [ ! -f ${HADOOP_BUILD_PATH}/id_rsa.pub ]; then
@@ -193,7 +193,7 @@ function build_hadoop_base() {
 
 function build_hadoop_namenode() {
 	local SHOULD_SQUASH=${1}
-	local HADOOP_VERSION=2.6.5
+	local HADOOP_VERSION=2.7.3
 	local HADOOP_BUILD_TARGET=${PLATFORM}-hadoop-namenode-${HADOOP_VERSION}
 	local HADOOP_BUILD_PATH=./${HADOOP_BUILD_TARGET}
 	if [ ${SHOULD_SQUASH} -eq 1 ]; then
@@ -226,8 +226,8 @@ function build_spark_driver() {
 }
 
 
-build_baseimage
-build_openjdk
-build_hadoop_base 0 
-build_hadoop_namenode 0
+#build_baseimage
+#build_openjdk
+#build_hadoop_base 0 
+#build_hadoop_namenode 0
 build_spark_driver 0
