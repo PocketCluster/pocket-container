@@ -6,21 +6,24 @@ USER root
 COPY bashrc /
 
 RUN apt-get update &&\
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends &&\
-    libpython2.7-minimal python-minimal python2.7-minimal &&\
-    libpython-stdlib libpython2.7-stdlib python &&\
-    python-pkg-resources python-setuptools python2.7 build-essential
+    apt-get install -y --no-install-recommends --no-install-suggests \
+#    libpython2.7-minimal python-minimal python2.7-minimal \
+#    libpython-stdlib libpython2.7-stdlib python-pkg-resources \
+    python python-setuptools python2.7 python-dev
+
+RUN apt-get install -y --no-install-recommends --no-install-suggests build-essential
 
 RUN easy_install pip &&\
     pip install --upgrade --ignore-installed --force-reinstall pip &&\
-    pip install jupyter
+    pip install jupyter 
 
 ## setup bashrc
 RUN cat /bashrc >> $HOME/.bashrc &&\
     rm /bashrc
 
-RUN apt remove -y build-essential &&\
-    apt-get autoremove -y --purge
+RUN apt-get remove -y build-essential &&\
+    apt-get autoremove -y && apt-get clean -y && apt-get autoclean -y &&\
+    rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 CMD ["/sbin/my_init"]
 
