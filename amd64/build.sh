@@ -225,23 +225,19 @@ function build_spark_driver() {
 	rm ${SPARK_BUILD_PATH}/Dockerfile
 }
 
-function build_spark_notebook() { 
+function build_jupyter_notebook() {
 	local SHOULD_SQUASH=${1}
-	local NOTEBOOK_VERSION=0.7.0
-	local NOTEBOOK_BUILD_TARGET=${PLATFORM}-sparknotebook-${NOTEBOOK_VERSION}
-	local NOTEBOOK_BUILD_PATH=./${NOTEBOOK_BUILD_TARGET}
-    if [[ ! -f ${NOTEBOOK_BUILD_PATH}/spark-notebook-${NOTEBOOK_VERSION}-scala-2.11.8-spark-2.1.0-hadoop-2.7.3.tar ]]; then
-        echo "Spark Notebook ${SPARK_VERSION} not found"
-        return 2
-    fi
+	local JUPYTER_VERSION=4.2.1
+	local JUPYTER_BUILD_TARGET=${PLATFORM}-jupyter-${JUPYTER_VERSION}
+	local JUPYTER_BUILD_PATH=./${JUPYTER_BUILD_TARGET}
 	if [ ${SHOULD_SQUASH} -eq 1 ]; then
-		sed 's/BUILDCHAINTAG/latest/g' ${NOTEBOOK_BUILD_PATH}/Dockerfile.template > ${NOTEBOOK_BUILD_PATH}/Dockerfile
-		_build_squash ${NOTEBOOK_BUILD_TARGET} || true
+		sed 's/BUILDCHAINTAG/latest/g' ${JUPYTER_BUILD_PATH}/Dockerfile.template > ${JUPYTER_BUILD_PATH}/Dockerfile
+		_build_squash ${JUPYTER_BUILD_TARGET} || true
 	else
-		sed 's/BUILDCHAINTAG/dev/g' ${NOTEBOOK_BUILD_PATH}/Dockerfile.template > ${NOTEBOOK_BUILD_PATH}/Dockerfile
-		_unsquashed_build ${NOTEBOOK_BUILD_TARGET} || true
+		sed 's/BUILDCHAINTAG/dev/g' ${JUPYTER_BUILD_PATH}/Dockerfile.template > ${JUPYTER_BUILD_PATH}/Dockerfile
+		_unsquashed_build ${JUPYTER_BUILD_TARGET} || true
 	fi
-	rm ${NOTEBOOK_BUILD_PATH}/Dockerfile
+	rm ${JUPYTER_BUILD_PATH}/Dockerfile
 }
 
 #build_baseimage
@@ -249,4 +245,4 @@ function build_spark_notebook() {
 #build_hadoop_base 0 
 #build_hadoop_namenode 0
 #build_spark_driver 0
-build_spark_notebook 0
+build_jupyter_notebook 0

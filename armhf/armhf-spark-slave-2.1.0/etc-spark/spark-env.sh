@@ -39,8 +39,8 @@ export SPARK_WORKER_CORES=4
 # 1 Worker (you can say 1 machine or 1 Worker Node) can launch multiple Executors
 export SPARK_WORKER_MEMORY=1g
 # To use non-default ports for the worker
-export SPARK_WORKER_PORT=8090
 export SPARK_WORKER_WEBUI_PORT=8081
+export SPARK_WORKER_PORT=8082
 # To set the number of worker processes per node
 export SPARK_WORKER_INSTANCES=1
 # To set the working directory of worker processes
