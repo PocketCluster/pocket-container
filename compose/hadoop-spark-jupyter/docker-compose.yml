@@ -2,7 +2,7 @@ version: '2'
 
 services:
   namenode:
-    image: pocketcluster/amd64-jupyter-4.2.1:dev
+    image: pocketcluster/amd64-jupyter-master-4.2.1:dev
 #    pid: "host"
     container_name: pc-core
     hostname: pc-core
@@ -15,7 +15,6 @@ services:
     volumes:
       - /pocket/hadoop/2.7.3:/pocket/hadoop
       - /pocket/spark/2.1.0:/pocket/spark
-      - /pocket/jupytor/4.3.2:/pocket/jupytor
       - /pocket/workspace:/pocket/workspace
     environment:
       - CLUSTER_NAME=pocketcluster/hadoop-spark-note
@@ -26,7 +25,7 @@ services:
       - datanode2
       
   datanode1:
-    image: pocketcluster/armhf-spark-slave-2.1.0:dev
+    image: pocketcluster/armhf-jupyter-slave-4.2.1:dev
     container_name: pc-node1
     hostname: pc-node1
     networks:
@@ -39,7 +38,7 @@ services:
       - constraint:node==pocket
 
   datanode2:
-    image: pocketcluster/armhf-spark-slave-2.1.0:dev
+    image: pocketcluster/armhf-jupyter-slave-4.2.1:dev
     container_name: pc-node2
     hostname: pc-node2
     networks:
