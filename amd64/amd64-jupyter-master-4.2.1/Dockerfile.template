@@ -21,9 +21,7 @@ RUN easy_install pip &&\
 RUN mkdir -p /usr/local/share/jupyter/kernels/pyspark/ &&\
     mv /kernel.json /usr/local/share/jupyter/kernels/pyspark/ &&\
 ## remove unnecessaries
-    apt-get remove -y build-essential &&\
-    apt-get autoremove -y && apt-get clean -y && apt-get autoclean -y &&\
-    rm -rf /var/lib/{apt,dpkg,cache,log}/
+    apt-get remove -y build-essential python-dev python-setuptools python-pkg-resources
 
 ## cleanup
 COPY cleanup.sh /
