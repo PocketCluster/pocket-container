@@ -110,12 +110,12 @@
 
     <property>
         <name>yarn.nodemanager.local-dirs</name>
-        <value>/pocket/hdfs/yarn/nm-local-dir</value>
+        <value>/pocket/hadoop/hdfs/yarn/nm-local-dir</value>
     </property>
 
     <property>
         <name>yarn.nodemanager.log-dirs</name>
-        <value>/pocket/hdfs/yarn/nm-log-dir/userlogs</value>
+        <value>/pocket/hadoop/hdfs/yarn/nm-log-dir/userlogs</value>
     </property>
 
     <property>

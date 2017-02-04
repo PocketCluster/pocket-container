@@ -50,7 +50,7 @@
 
     <property>
         <name>dfs.datanode.data.dir</name>
-        <value>file:///pocket/hdfs/datanode</value>
+        <value>file:///pocket/hadoop/hdfs/datanode</value>
     </property>
 
     <property> 

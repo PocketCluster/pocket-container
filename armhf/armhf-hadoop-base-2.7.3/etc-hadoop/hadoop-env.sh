@@ -26,7 +26,7 @@
 # remote nodes.
 
 # The java implementation to use.
-export JAVA_HOME="/opt/jdk/jre"
+export JAVA_HOME="/opt/jdk"
 
 # The jsvc implementation to use. Jsvc is required to run secure datanodes.
 #export JSVC_HOME=${JSVC_HOME}
@@ -67,7 +67,7 @@ export HADOOP_SECURE_DN_USER=${HADOOP_SECURE_DN_USER}
 
 # Where log files are stored.  $HADOOP_HOME/logs by default.
 #export HADOOP_LOG_DIR=${HADOOP_LOG_DIR}/$USER
-export HADOOP_LOG_DIR="/pocket/log"
+export HADOOP_LOG_DIR="/pocket/hadoop/log"
 
 # Where log files are stored in the secure data environment.
 export HADOOP_SECURE_DN_LOG_DIR=${HADOOP_LOG_DIR}/${HADOOP_HDFS_USER}
