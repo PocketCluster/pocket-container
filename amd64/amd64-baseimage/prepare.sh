@@ -54,6 +54,9 @@ ln -sf /bin/true /sbin/initctl
 dpkg-divert --local --rename --add /usr/bin/ischroot
 ln -sf /bin/true /usr/bin/ischroot
 
+# set default shell as bash
+chsh -s $(type -p bash) root
+
 # debian package update
 echo 'deb http://ftp.debian.org/debian stable main contrib'>> /etc/apt/sources.list && apt-get update
 

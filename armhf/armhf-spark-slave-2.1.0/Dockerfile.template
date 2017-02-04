@@ -1,4 +1,4 @@
-FROM pocketcluster/armhf-hadoop-datanode-2.6.5:BUILDCHAINTAG
+FROM pocketcluster/armhf-hadoop-datanode-2.7.3:BUILDCHAINTAG
 MAINTAINER PocketCluster <stkim1@pocketcluster.io>
 
 USER root
@@ -7,6 +7,8 @@ USER root
 COPY bashrc /
 COPY spark-launch.sh /etc/my_init.d/02-spark-launch.sh
 COPY spark-2.1.0-bin-without-hadoop.tgz /
+RUN  mkdir -p /etc/spark/
+COPY etc-spark/* /etc/spark/
 
 #install spark 2.1.0
 RUN tar -xzf /spark-2.1.0-bin-without-hadoop.tgz &&\
@@ -19,15 +21,14 @@ RUN tar -xzf /spark-2.1.0-bin-without-hadoop.tgz &&\
     rm -rf /opt/spark/python/docs &&\
     rm -rf /opt/spark/python/test_support &&\
 ## setup
-    mkdir -p /etc/spark &&\
+    chown -R root:root /opt/spark &&\
+    chown -R root:root /etc/spark &&\
 ## base spark env variables 
     cat /bashrc >> $HOME/.bashrc &&\
     rm /bashrc &&\
 ## set execute permission
     chmod a+x /etc/my_init.d/02-spark-launch.sh
 
-COPY etc-spark/* /etc/spark/
-
 CMD ["/sbin/my_init"]
 
-EXPOSE 4040 7001 7002 7003 7004 7005 7006 7077 8080 8081 8090
+EXPOSE 4040 7001 7002 7003 7004 7005 7006 7077 8080 8081 8082
