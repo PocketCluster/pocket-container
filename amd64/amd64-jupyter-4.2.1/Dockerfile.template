@@ -4,24 +4,27 @@ MAINTAINER PocketCluster <stkim1@pocketcluster.io>
 USER root
 
 COPY bashrc /
+COPY kernel.json /
 
 RUN apt-get update &&\
-    apt-get install -y --no-install-recommends --no-install-suggests \
-#    libpython2.7-minimal python-minimal python2.7-minimal \
-#    libpython-stdlib libpython2.7-stdlib python-pkg-resources \
+    apt-get install -y --no-install-recommends --no-install-suggests --force-yes \
+    libpython2.7-minimal python-minimal python2.7-minimal \
+    libpython-stdlib libpython2.7-stdlib python-pkg-resources \
     python python-setuptools python2.7 python-dev
 
 RUN apt-get install -y --no-install-recommends --no-install-suggests build-essential
 
 RUN easy_install pip &&\
-    pip install --upgrade --ignore-installed --force-reinstall pip &&\
-    pip install jupyter 
+    pip install --upgrade --ignore-installed --force-reinstall --no-cache-dir pip &&\
+    pip install --no-cache-dir jupyter 
 
 ## setup bashrc
 RUN cat /bashrc >> $HOME/.bashrc &&\
-    rm /bashrc
-
-RUN apt-get remove -y build-essential &&\
+    rm /bashrc &&\
+    mkdir -p /usr/local/share/jupyter/kernels/pyspark/ &&\
+    mv /kernel.json /usr/local/share/jupyter/kernels/pyspark/ &&\
+## remove unnecessaries
+    apt-get remove -y build-essential &&\
     apt-get autoremove -y && apt-get clean -y && apt-get autoclean -y &&\
     rm -rf /var/lib/{apt,dpkg,cache,log}/
 
