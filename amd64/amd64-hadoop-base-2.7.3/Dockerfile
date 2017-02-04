@@ -10,12 +10,6 @@ COPY config /
 COPY id_rsa* /
 COPY hadoop-2.7.3.tar.gz /
 
-# install openssh-server related tools
-RUN apt-get update &&\
-	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends net-tools &&\
-	apt-get clean -y && apt-get autoclean -y && apt-get autoremove -y &&\
-	rm -rf /var/lib/{apt,dpkg,cache,log}/
-
 #configure ssh free key access
 RUN mkdir -p /var/run/sshd &&\
 	mkdir -p $HOME/.ssh &&\

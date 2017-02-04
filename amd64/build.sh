@@ -166,9 +166,14 @@ function build_baseimage() {
 }
 
 function build_openjdk() {
+	local SHOULD_SQUASH=${1}
 	local JDK_VERSION=1.8.0
 	local JDK_BUILD_TARGET=${PLATFORM}-openjdk-${JDK_VERSION}
-	_build_squash ${JDK_BUILD_TARGET}
+	if [ ${SHOULD_SQUASH} -eq 1 ]; then
+		_build_squash ${JDK_BUILD_TARGET} || true
+	else
+		_unsquashed_build ${JDK_BUILD_TARGET} || true
+	fi
 }
 
 function build_hadoop_base() {
@@ -225,10 +230,10 @@ function build_spark_driver() {
 	rm ${SPARK_BUILD_PATH}/Dockerfile
 }
 
-function build_jupyter_notebook() {
+function build_jupyter_master() {
 	local SHOULD_SQUASH=${1}
 	local JUPYTER_VERSION=4.2.1
-	local JUPYTER_BUILD_TARGET=${PLATFORM}-jupyter-${JUPYTER_VERSION}
+	local JUPYTER_BUILD_TARGET=${PLATFORM}-jupyter-master-${JUPYTER_VERSION}
 	local JUPYTER_BUILD_PATH=./${JUPYTER_BUILD_TARGET}
 	if [ ${SHOULD_SQUASH} -eq 1 ]; then
 		sed 's/BUILDCHAINTAG/latest/g' ${JUPYTER_BUILD_PATH}/Dockerfile.template > ${JUPYTER_BUILD_PATH}/Dockerfile
@@ -241,8 +246,8 @@ function build_jupyter_notebook() {
 }
 
 #build_baseimage
-#build_openjdk
+#build_openjdk 1
 #build_hadoop_base 0 
 #build_hadoop_namenode 0
 #build_spark_driver 0
-build_jupyter_notebook 0
+build_jupyter_master 0

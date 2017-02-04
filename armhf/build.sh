@@ -210,8 +210,24 @@ function build_spark_slave() {
 	rm ${SPARK_BUILD_PATH}/Dockerfile
 }
 
+function build_jupyter_slave() {
+	local SHOULD_SQUASH=${1}
+	local JUPYTER_VERSION=4.2.1
+	local JUPYTER_BUILD_TARGET=${PLATFORM}-jupyter-slave-${JUPYTER_VERSION}
+	local JUPYTER_BUILD_PATH=./${JUPYTER_BUILD_TARGET}
+	if [ ${SHOULD_SQUASH} -eq 1 ]; then
+		sed 's/BUILDCHAINTAG/latest/g' ${JUPYTER_BUILD_PATH}/Dockerfile.template > ${JUPYTER_BUILD_PATH}/Dockerfile
+		_build_squash ${JUPYTER_BUILD_TARGET} || true
+	else
+		sed 's/BUILDCHAINTAG/dev/g' ${JUPYTER_BUILD_PATH}/Dockerfile.template > ${JUPYTER_BUILD_PATH}/Dockerfile
+		_unsquashed_build ${JUPYTER_BUILD_TARGET} || true
+	fi
+	rm ${JUPYTER_BUILD_PATH}/Dockerfile
+}
+
 #build_baseimage
 #build_zulu_jdk
 #build_hadoop_base 0
 #build_hadoop_datanode 0
-build_spark_slave 0
+#build_spark_slave 0
+build_jupyter_slave 0

@@ -1,0 +1,26 @@
+FROM pocketcluster/armhf-spark-slave-2.1.0:BUILDCHAINTAG
+MAINTAINER PocketCluster <stkim1@pocketcluster.io>
+
+USER root
+
+RUN apt-get update &&\
+    apt-get install -y --no-install-recommends --no-install-suggests --force-yes \
+    libpython2.7-minimal python-minimal python2.7-minimal \
+    libpython-stdlib libpython2.7-stdlib python-pkg-resources \
+    python python-setuptools python2.7
+
+RUN easy_install pip &&\
+    pip install --upgrade --ignore-installed --force-reinstall --no-cache-dir pip &&\
+    pip install --no-cache-dir numpy scikit-learn
+
+## remove unnecessaries
+RUN apt-get autoremove -y && apt-get clean -y && apt-get autoclean -y &&\
+    rm -rf /var/lib/{apt,dpkg,cache,log}/
+
+## cleanup
+COPY cleanup.sh /
+RUN chmod +x /cleanup.sh && /cleanup.sh
+
+CMD ["/sbin/my_init"]
+
+EXPOSE 8888
