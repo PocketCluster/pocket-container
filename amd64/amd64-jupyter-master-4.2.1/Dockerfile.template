@@ -11,21 +11,26 @@ RUN apt-get update &&\
     libpython-stdlib libpython2.7-stdlib python-pkg-resources \
     python python-setuptools python2.7 python-dev
 
-RUN apt-get install -y --no-install-recommends --no-install-suggests build-essential
+RUN apt-get install -y --no-install-recommends --no-install-suggests build-essential 
+
+RUN echo 'deb http://http.debian.net/debian jessie-backports main' >> /etc/apt/sources.list.d/backport.list &&\
+    apt-get update &&\
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends --no-install-suggests --force-yes openjdk-8-jdk || true
 
 RUN easy_install pip &&\
     pip install --upgrade --ignore-installed --force-reinstall --no-cache-dir pip &&\
-    pip install --no-cache-dir jupyter numpy scikit-learn
+    pip install --no-cache-dir jupyter numpy &&\
+    JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/" HADOOP_CONF_DIR="/etc/hadoop/" PATH="${JAVA_HOME}/bin:${PATH}" pip install --no-cache-dir pydoop
 
 ## setup bashrc
 RUN mkdir -p /usr/local/share/jupyter/kernels/pyspark/ &&\
-    mv /kernel.json /usr/local/share/jupyter/kernels/pyspark/ &&\
-## remove unnecessaries
-    apt-get remove -y build-essential python-dev python-setuptools python-pkg-resources
+    mv /kernel.json /usr/local/share/jupyter/kernels/pyspark/
 
 ## cleanup
 COPY cleanup.sh /
-RUN chmod +x /cleanup.sh && /cleanup.sh
+RUN apt-get remove -y build-essential python-dev python-setuptools python-pkg-resources openjdk-8-jdk openjdk-8-jre openjdk-8-jdk-headless &&\
+    rm /etc/apt/sources.list.d/backport.list &&\
+    chmod +x /cleanup.sh && /cleanup.sh
 
 CMD ["/sbin/my_init"]
 
