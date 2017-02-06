@@ -6,17 +6,18 @@ USER root
 RUN apt-get update &&\
     apt-get install -y --no-install-recommends --no-install-suggests --force-yes \
     libpython2.7-minimal python-minimal python2.7-minimal \
-    libpython-stdlib libpython2.7-stdlib python-pkg-resources
-#    python python-setuptools python2.7 python-dev
+    libpython-stdlib libpython2.7-stdlib python-pkg-resources \
+    python python-setuptools python2.7 python-dev
 
-#RUN apt-get install -y --no-install-recommends --no-install-suggests build-essential
+RUN apt-get install -y --no-install-recommends --no-install-suggests build-essential
 
-#RUN easy_install pip &&\
-#    pip install --upgrade --ignore-installed --force-reinstall --no-cache-dir pip &&\
-#    pip install --no-cache-dir numpy scikit-learn
+RUN easy_install pip &&\
+    pip install --upgrade --ignore-installed --force-reinstall --no-cache-dir pip &&\
+    pip install --no-cache-dir numpy
+#    pip install --no-cache-dir scikit-learn
 
 ## remove unneeded packages
-#RUN apt-get remove -y build-essential python-dev python-setuptools python-pkg-resources
+RUN apt-get remove -y build-essential python-dev python-setuptools python-pkg-resources
 
 ## cleanup
 COPY cleanup.sh /

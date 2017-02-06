@@ -25,18 +25,18 @@ for f in $J_INSTALL_DIR/jre/bin/*; do
 
             if [ ! $arch = "arm" ]; then
                 update-alternatives --install /usr/bin/$name $name $J_INSTALL_DIR/jre/bin/$name $LATEST --slave /usr/share/man/man1/$name.1.gz $name.1.gz $J_INSTALL_DIR/man/man1/$name.1.gz
-                echo "jre $name $J_INSTALL_DIR/jre/bin/$name" >> /opt/.jdk1.8.0_102.jinfo
+                echo "jre $name $J_INSTALL_DIR/jre/bin/$name" >> /opt/.jdk1.8.0.jinfo
             else
                 # There's no javaws, jvisualvm or jmc on arm
                 [ ! $name = "javaws" ] && [ ! $name = "jvisualvm" ] && [ ! $name = "jmc" ] && update-alternatives --install /usr/bin/$name $name $J_INSTALL_DIR/jre/bin/$name $LATEST --slave /usr/share/man/man1/$name.1.gz $name.1.gz $J_INSTALL_DIR/man/man1/$name.1.gz
-                [ ! $name = "javaws" ] && [ ! $name = "jvisualvm" ] && [ ! $name = "jmc" ] && echo "jre $name $J_INSTALL_DIR/jre/bin/$name" >> /opt/.jdk1.8.0_102.jinfo
+                [ ! $name = "javaws" ] && [ ! $name = "jvisualvm" ] && [ ! $name = "jmc" ] && echo "jre $name $J_INSTALL_DIR/jre/bin/$name" >> /opt/.jdk1.8.0.jinfo
             fi
 
          else #no man pages available
 
             # [ ! $name = "javaws.real" ] = skip javaws.real     
             [ ! $name = "javaws.real" ] && update-alternatives --install /usr/bin/$name $name $J_INSTALL_DIR/jre/bin/$name $LATEST
-            [ ! $name = "javaws.real" ] && echo "jre $name $J_INSTALL_DIR/jre/bin/$name" >> /opt/.jdk1.8.0_102.jinfo
+            [ ! $name = "javaws.real" ] && echo "jre $name $J_INSTALL_DIR/jre/bin/$name" >> /opt/.jdk1.8.0.jinfo
             
          fi
     fi
@@ -44,7 +44,7 @@ for f in $J_INSTALL_DIR/jre/bin/*; do
 done
 
 #link JRE not in jre/bin
-[ -f $J_INSTALL_DIR/jre/lib/jexec ]    && update-alternatives --install /usr/bin/jexec    jexec    $J_INSTALL_DIR/jre/lib/jexec    $LATEST --slave /usr/share/binfmts/jar jexec-binfmt $J_INSTALL_DIR/jre/lib/jar.binfmt && echo "jre jexec $J_INSTALL_DIR/jre/lib/jexec" >> /opt/.jdk1.8.0_102.jinfo
+[ -f $J_INSTALL_DIR/jre/lib/jexec ]    && update-alternatives --install /usr/bin/jexec    jexec    $J_INSTALL_DIR/jre/lib/jexec    $LATEST --slave /usr/share/binfmts/jar jexec-binfmt $J_INSTALL_DIR/jre/lib/jar.binfmt && echo "jre jexec $J_INSTALL_DIR/jre/lib/jexec" >> /opt/.jdk1.8.0.jinfo
 
 #This will issue ignorable warnings for alternatives that are not part of a group
 #Link JDK files with/without man pages
@@ -66,11 +66,11 @@ if [ -d "$J_INSTALL_DIR/man/man1" ];then
       		if [ ! -e $J_INSTALL_DIR/jre/bin/$name ]; then #don't link already linked JRE files
 				if [ ! $arch = "arm" ]; then
           			update-alternatives --install /usr/bin/$name $name $J_INSTALL_DIR/bin/$name $LATEST --slave /usr/share/man/man1/$name.1.gz $name.1.gz $J_INSTALL_DIR/man/man1/$name.1.gz
-          			echo "jdk $name $J_INSTALL_DIR/bin/$name" >> /opt/.jdk1.8.0_102.jinfo
+          			echo "jdk $name $J_INSTALL_DIR/bin/$name" >> /opt/.jdk1.8.0.jinfo
 				else
 					# There's no javaws, jvisualvm or jmc on arm
 					[ ! $name = "javaws" ] && [ ! $name = "jvisualvm" ] && [ ! $name = "jmc" ] && update-alternatives --install /usr/bin/$name $name $J_INSTALL_DIR/bin/$name $LATEST --slave /usr/share/man/man1/$name.1.gz $name.1.gz $J_INSTALL_DIR/man/man1/$name.1.gz
-					[ ! $name = "javaws" ] && [ ! $name = "jvisualvm" ] && [ ! $name = "jmc" ] && echo "jdk $name $J_INSTALL_DIR/bin/$name" >> /opt/.jdk1.8.0_102.jinfo
+					[ ! $name = "javaws" ] && [ ! $name = "jvisualvm" ] && [ ! $name = "jmc" ] && echo "jdk $name $J_INSTALL_DIR/bin/$name" >> /opt/.jdk1.8.0.jinfo
 				fi
       		fi
         fi
@@ -81,7 +81,7 @@ else  #no man pages available
         if [ ! -f "/usr/bin/$name" -o -L "/usr/bin/$name" ]; then  #some files, like jvisualvm might not be links
             if [ ! -e $J_INSTALL_DIR/jre/bin/$name ]; then #don't link already linked JRE files
                 update-alternatives --install /usr/bin/$name $name $J_INSTALL_DIR/bin/$name $LATEST
-                echo "jdk $name $J_INSTALL_DIR/bin/$name" >> /opt/.jdk1.8.0_102.jinfo
+                echo "jdk $name $J_INSTALL_DIR/bin/$name" >> /opt/.jdk1.8.0.jinfo
             fi
         fi
     done
