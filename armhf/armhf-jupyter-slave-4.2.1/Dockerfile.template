@@ -1,6 +1,8 @@
 FROM pocketcluster/armhf-spark-slave-2.1.0:BUILDCHAINTAG
 MAINTAINER PocketCluster <stkim1@pocketcluster.io>
 
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US.UTF-8' LC_ALL='en_US.UTF-8'
+
 USER root
 
 RUN apt-get update &&\

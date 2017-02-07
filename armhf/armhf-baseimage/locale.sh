@@ -3,7 +3,8 @@ set -e
 source /bd_build/buildconfig
 set -x
 
-DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends --no-install-suggests locales
+## Fix locale.
+$minimal_apt_get_install locales
 
 # Setup default locale
 cat <<EOM >/etc/default/locale
@@ -18,11 +19,11 @@ LC_ADDRESS="en_US.UTF-8"
 LC_TELEPHONE="en_US.UTF-8"
 LC_MEASUREMENT="en_US.UTF-8"
 LC_IDENTIFICATION="en_US.UTF-8"
-LC_CTYPE="en_US.UTF-8"
 LC_COLLATE="en_US.UTF-8"
-LC_ALL="en_US.UTF-8"
 LC_MESSAGES="en_US.UTF-8"
 LC_RESPONSE="en_US.UTF-8"
+LC_CTYPE="en_US.UTF-8"
+LC_ALL="en_US.UTF-8"
 EOM
 
 cat <<EOM >/etc/locale.gen
@@ -34,13 +35,11 @@ cat <<EOM >/etc/locale.gen
 en_US.UTF-8 UTF-8
 EOM
 
-for LOCALE in $(locale | cut -d'=' -f2 | grep -v : | sed 's/"//g' | uniq); do
-    if [ -n "${LOCALE}" ]; then
-        locale-gen $LOCALE
-        update-locale LC_ALL=$LOCALE
-    fi
-done
+echo -n en_US.UTF-8 > /etc/container_environment/LANG
+echo -n en_US.UTF-8 > /etc/container_environment/LANGUAGE
+echo -n en_US.UTF-8 > /etc/container_environment/LC_CTYPE
+echo -n en_US.UTF-8 > /etc/container_environment/LC_ALL
 
+locale-gen en_US.UTF-8
+update-locale LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_CTYPE=en_US.UTF-8 LC_ALL=en_US.UTF-8
 dpkg-reconfigure --frontend=noninteractive locales
-
-find /usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en*' | xargs rm -rf
