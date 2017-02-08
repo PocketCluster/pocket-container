@@ -4,6 +4,9 @@ MAINTAINER PocketCluster <stkim1@pocketcluster.io>
 USER root
 
 COPY kernel.json /
+COPY jupyter_notebook_config.py /
+COPY jupyter.runit /
+COPY jupyter-selfsign.sh /etc/my_init.d/03-jupyter-selfsign.sh
 
 RUN apt-get update &&\
     apt-get install -y --no-install-recommends --no-install-suggests --force-yes \
@@ -22,9 +25,14 @@ RUN easy_install pip &&\
     pip install --no-cache-dir jupyter numpy matplotlib &&\
     JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/" HADOOP_CONF_DIR="/etc/hadoop/" PATH="${JAVA_HOME}/bin:${PATH}" pip install --no-cache-dir pydoop
 
-## setup bashrc
-RUN mkdir -p /usr/local/share/jupyter/kernels/pyspark/ &&\
-    mv /kernel.json /usr/local/share/jupyter/kernels/pyspark/
+## setup jupyter configuration
+RUN mkdir -p /usr/local/share/jupyter/certs &&\
+    mkdir -p /usr/local/share/jupyter/kernels/pyspark/ &&\
+    mv /kernel.json /usr/local/share/jupyter/kernels/pyspark/ &&\
+    mkdir -p /usr/local/share/jupyter/config &&\
+    mv /jupyter_notebook_config.py /usr/local/share/jupyter/config &&\
+    mkdir -p /etc/service/jupyter &&\
+    mv /jupyter.runit /etc/service/jupyter/run
 
 ## cleanup
 COPY cleanup.sh /
