@@ -59,20 +59,3 @@ chsh -s $(type -p bash) root
 
 # debian package update
 echo 'deb http://ftp.debian.org/debian stable main contrib'>> /etc/apt/sources.list && apt-get update
-
-## Install HTTPS support for APT.
-#$minimal_apt_get_install apt-transport-https ca-certificates
-$minimal_apt_get_install ca-certificates
-
-## Install add-apt-repository
-#$minimal_apt_get_install software-properties-common
-
-## Upgrade all packages.
-#apt-get dist-upgrade -y --no-install-recommends
-
-## Fix locale.
-#$minimal_apt_get_install language-pack-en
-#locale-gen en_US
-#update-locale LANG=en_US.UTF-8 LC_CTYPE=en_US.UTF-8
-#echo -n en_US.UTF-8 > /etc/container_environment/LANG
-#echo -n en_US.UTF-8 > /etc/container_environment/LC_CTYPE

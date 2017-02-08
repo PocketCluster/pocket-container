@@ -20,15 +20,6 @@ chown :docker_env /etc/container_environment.sh /etc/container_environment.json
 chmod 640 /etc/container_environment.sh /etc/container_environment.json
 ln -s /etc/container_environment.sh /etc/profile.d/
 
-## These are auxillary items but strongly necessary
-$minimal_apt_get_install apt-utils net-tools
-
-## My_INIT pre-requisite
-$minimal_apt_get_install python3-minimal libpython3-stdlib
-
-## Install runit.
-$minimal_apt_get_install runit
-
 ## Install a syslog daemon and logrotate.
 [ "$DISABLE_SYSLOG" -eq 0 ] && /bd_build/services/syslog-ng/syslog-ng.sh || true
 

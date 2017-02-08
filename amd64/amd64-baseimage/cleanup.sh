@@ -3,11 +3,40 @@ set -e
 source /bd_build/buildconfig
 set -x
 
-# clean apt in legitimate way
-apt-get clean -y && apt-get autoclean -y && apt-get autoremove -y --purge 
+# Setup default locale again as it would be mangled by locale-gen, dpkg-reconfigure
+cat <<EOM >/etc/default/locale
+LANG="en_US.UTF-8"
+LANGUAGE="en_US.UTF-8"
+LC_NUMERIC="en_US.UTF-8"
+LC_TIME="en_US.UTF-8"
+LC_MONETARY="en_US.UTF-8"
+LC_PAPER="en_US.UTF-8"
+LC_NAME="en_US.UTF-8"
+LC_ADDRESS="en_US.UTF-8"
+LC_TELEPHONE="en_US.UTF-8"
+LC_MEASUREMENT="en_US.UTF-8"
+LC_IDENTIFICATION="en_US.UTF-8"
+LC_COLLATE="en_US.UTF-8"
+LC_MESSAGES="en_US.UTF-8"
+LC_RESPONSE="en_US.UTF-8"
+LC_CTYPE="en_US.UTF-8"
+LC_ALL="en_US.UTF-8"
+EOM
+
+cat <<EOM >/etc/locale.gen
+# This file lists locales that you wish to have built. You can find a list
+# of valid supported locales at /usr/share/i18n/SUPPORTED, and you can add
+# user defined locales to /usr/local/share/i18n/SUPPORTED. If you change
+# this file, you need to rerun locale-gen.
+
+en_US.UTF-8 UTF-8
+EOM
 
 # slash locales (for debian only)
 cp -R /usr/share/locale/en\@* /tmp/ && rm -rf /usr/share/locale/* && mv /tmp/en\@* /usr/share/locale/
+
+# clean apt in legitimate way
+apt-get clean -y && apt-get autoclean -y && apt-get autoremove -y --purge 
 
 rm -f /etc/apt/*.save || true
 rm -f /etc/apt/sources.list.d/*.save || true
