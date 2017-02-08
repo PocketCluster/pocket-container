@@ -1,3 +1,6 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-exec JUPYTER_CONFIG_DIR="/pocket/workspace" /usr/local/bin/jupyter notebook >>/var/log/memcached.log 2>&1
+source /root/.bashrc
+export JUPYTER_CONFIG_DIR="/usr/local/share/jupyter/config" 
+
+/usr/local/bin/jupyter notebook >>/var/log/memcached.log 2>&1

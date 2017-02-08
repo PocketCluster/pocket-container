@@ -18,11 +18,24 @@ RUN easy_install pip &&\
     pip install --no-cache-dir numpy
 #    pip install --no-cache-dir scikit-learn
 
-## remove unneeded packages
-RUN apt-get remove -y build-essential python-dev python-setuptools python-pkg-resources
-
 ## cleanup
 COPY cleanup.sh /
-RUN chmod +x /cleanup.sh && /cleanup.sh
+RUN apt-get remove -y build-essential python-dev python-setuptools python-pkg-resources &&\
+## uninstall pip with pkg managers
+    pip uninstall -y pip &&\
+## remove cache
+    rm -rf /root/.cache &&\
+    rm -rf /usr/local/lib/python2.7/site-packages/* &&\
+## remove residue    
+    rm -rf /usr/local/lib/python2.7/dist-packages/pip &&\
+    rm -rf /usr/local/lib/python2.7/dist-packages/pip-* &&\
+    rm -rf /usr/local/bin/pip* &&\
+## remove easy_install    
+    rm -rf /usr/local/lib/python2.7/dist-packages/easy_install* &&\
+    rm -rf /usr/local/lib/python2.7/dist-packages/easy-install.pth &&\
+    rm -rf /usr/local/lib/python2.7/dist-packages/setuptools/command/easy_install* &&\
+    rm -rf /usr/local/bin/easy_install* &&\
+## remove backport
+    chmod +x /cleanup.sh && /cleanup.sh
 
 CMD ["/sbin/my_init"]
