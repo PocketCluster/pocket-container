@@ -1,0 +1,45 @@
+FROM pc-master:5000/aarch64-spark-slave-2.1.0:BUILDCHAINTAG
+MAINTAINER PocketCluster <stkim1@pocketcluster.io>
+
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US.UTF-8' LC_ALL='en_US.UTF-8'
+
+USER root
+
+RUN apt-get update &&\
+    apt-get install -y --no-install-recommends --no-install-suggests --force-yes \
+    libpython2.7-minimal python-minimal python2.7-minimal \
+    libpython-stdlib libpython2.7-stdlib python-pkg-resources \
+    python python-setuptools python2.7 python-dev
+
+RUN apt-get install -y --no-install-recommends --no-install-suggests build-essential
+
+RUN easy_install pip &&\
+    pip install --upgrade --ignore-installed --force-reinstall --no-cache-dir pip &&\
+    pip install --no-cache-dir numpy
+#    pip install --no-cache-dir scipy scikit-learn
+
+## cleanup
+COPY cleanup.sh /
+RUN apt-get remove -y build-essential python-dev python-setuptools python-pkg-resources &&\
+    apt-get clean &&\
+    apt-get autoclean &&\
+    apt-get autoremove --purge -y &&\
+## uninstall pip with pkg managers
+    pip uninstall -y pip &&\
+## remove cache
+    rm -rf /root/.cache &&\
+    rm -rf /usr/local/lib/python2.7/site-packages/* &&\
+## remove residue    
+    rm -rf /usr/local/lib/python2.7/dist-packages/pip &&\
+    rm -rf /usr/local/lib/python2.7/dist-packages/pip-* &&\
+    rm -rf /usr/local/bin/pip* &&\
+## remove easy_install    
+    rm -rf /usr/local/lib/python2.7/dist-packages/easy_install* &&\
+    rm -rf /usr/local/lib/python2.7/dist-packages/easy-install.pth &&\
+    rm -rf /usr/local/lib/python2.7/dist-packages/setuptools/command/easy_install* &&\
+    rm -rf /usr/local/bin/easy_install*
+
+## clean up
+RUN (chmod +x /cleanup.sh && /cleanup.sh && rm -rf /cleanup.sh || true)
+
+CMD ["/sbin/my_init"]
