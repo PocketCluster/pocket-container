@@ -55,7 +55,9 @@ RUN apt-get remove -y build-essential python-dev python-setuptools python-pkg-re
     rm -rf /usr/local/bin/easy_install* &&\
 ## remove backport
     rm /etc/apt/sources.list.d/backport.list &&\
-    chmod +x /cleanup.sh && /cleanup.sh
+## clean up
+    /bin/bash /cleanup.sh &&\
+    (rm -rf /cleanup.sh || true)
 
 CMD ["/sbin/my_init"]
 

@@ -37,9 +37,9 @@ RUN apt-get remove -y build-essential python-dev python-setuptools python-pkg-re
     rm -rf /usr/local/lib/python2.7/dist-packages/easy_install* &&\
     rm -rf /usr/local/lib/python2.7/dist-packages/easy-install.pth &&\
     rm -rf /usr/local/lib/python2.7/dist-packages/setuptools/command/easy_install* &&\
-    rm -rf /usr/local/bin/easy_install*
-
+    rm -rf /usr/local/bin/easy_install* &&\
 ## clean up
-RUN (chmod +x /cleanup.sh && /cleanup.sh && rm -rf /cleanup.sh || true)
+    /bin/bash /cleanup.sh &&\
+    (rm -rf /cleanup.sh || true)
 
 CMD ["/sbin/my_init"]

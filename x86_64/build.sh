@@ -249,9 +249,9 @@ function build_jupyter_master() {
 	rm ${JUPYTER_BUILD_PATH}/Dockerfile
 }
 
-build_baseimage 0
+#build_baseimage 0
 #build_openjdk 0
 #build_hadoop_base 0 
 #build_hadoop_namenode 0
 #build_spark_driver 0
-#build_jupyter_master 1
+build_jupyter_master 0

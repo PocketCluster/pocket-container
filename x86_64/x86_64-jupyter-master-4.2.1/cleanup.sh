@@ -45,6 +45,3 @@ mkdir -p /usr/share/info
 # Potentially sensitive.
 rm -f /root/.bash_history
 rm -f /root/.ssh/known_hosts
-
-## self desturction
-rm -rf /cleanup.sh
