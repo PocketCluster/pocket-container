@@ -235,9 +235,9 @@ function build_jupyter_slave() {
 	rm ${JUPYTER_BUILD_PATH}/Dockerfile
 }
 
-#build_baseimage 0
+build_baseimage 0
 #build_openjdk 0
 #build_hadoop_base 0
 #build_hadoop_datanode 0
 #build_spark_slave 0
-build_jupyter_slave 1
+#build_jupyter_slave 1
