@@ -124,11 +124,13 @@ export PREFIX=pc-master:5000
 # - aarch64 PINE64/ODROID-C2
 export PLATFORM=aarch64
 
-# - dev    (unsquashed, in-develope)
-# - latest (squashed, in-production)
-
-export TAG=${TAG:-"latest"}
+# temporary directory
 export TMP_DIR=${TMP_DIR:-"/work/TEMP"}
+
+# - latest    (unsquashed, in-develope)
+# - <ver num> (squashed, in-production)
+export TAG=${TAG:-"latest"}
+export REL_TAG="0.1.4"
 
 function _build_squash() {
 	local BUILD_TARGET=${1}
@@ -235,9 +237,16 @@ function build_jupyter_slave() {
 	rm ${JUPYTER_BUILD_PATH}/Dockerfile
 }
 
-build_baseimage 0
+function squash_final_slave() {
+	local JUPYTER_VERSION=4.2.1
+	local BUILD_TARGET=${PLATFORM}-jupyter-slave-${JUPYTER_VERSION}
+	TMPDIR=${TMP_DIR} docker-squash -t ${PREFIX}/${BUILD_TARGET}:${REL_TAG} ${PREFIX}/${BUILD_TARGET}:${TAG}
+}
+
+#build_baseimage 0
 #build_openjdk 0
 #build_hadoop_base 0
 #build_hadoop_datanode 0
 #build_spark_slave 0
-#build_jupyter_slave 1
+#build_jupyter_slave 0
+squash_final_slave
