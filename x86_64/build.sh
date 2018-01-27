@@ -140,10 +140,13 @@ export PREFIX=${PREFIX:-"pc-master:5000"}
 # - ARM64 PINE64/ODROID-C2
 export PLATFORM=${PLATFORM:-"x86_64"}
 
-# - dev     (unsquashed, in-develope)
-# - release (squashed, in-production)
-export TAG=${TAG:-latest}
+# temporary directory
 export TMP_DIR=${TMP_DIR:-"/pocket"}
+
+# - latest    (unsquashed, in-develope)
+# - <ver num> (squashed, in-production)
+export TAG=${TAG:-"latest"}
+export REL_TAG="0.1.4"
 
 function _build_squash() {
 	local BUILD_TARGET=${1}
@@ -249,9 +252,16 @@ function build_jupyter_master() {
 	rm ${JUPYTER_BUILD_PATH}/Dockerfile
 }
 
+function squash_final_core() {
+	local JUPYTER_VERSION=4.2.1
+	local BUILD_TARGET=${PLATFORM}-jupyter-master-${JUPYTER_VERSION}
+	TMPDIR=${TMP_DIR} docker-squash -t ${PREFIX}/${BUILD_TARGET}:${REL_TAG} ${PREFIX}/${BUILD_TARGET}:${TAG}
+}
+
 #build_baseimage 0
 #build_openjdk 0
 #build_hadoop_base 0 
 #build_hadoop_namenode 0
 #build_spark_driver 0
-build_jupyter_master 0
+#build_jupyter_master 0
+squash_final_core
