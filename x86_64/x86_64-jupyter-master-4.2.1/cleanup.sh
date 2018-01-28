@@ -29,8 +29,10 @@ rm -rf /var/lib/cache/*
 rm -rf /var/lib/log/*
 rm -rf /var/cache/apt/pkgcache.bin
 rm -rf /var/cache/apt/srcpkgcache.bin
+
 ## removing /var/lib/dpkg should be at the last
-rm -rf /var/lib/{apt,dpkg,cache,log}/
+## (2018/01/27) we're not deleting these to regnerate ssh keys
+#rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 # remove docs and man instead of brueforce removal, let's left copyright notices
 find /usr/share/doc -depth -type f ! -name copyright|xargs rm || true

@@ -57,7 +57,8 @@ RUN apt-get remove -y build-essential python-dev python-setuptools python-pkg-re
     rm /etc/apt/sources.list.d/backport.list &&\
 ## clean up
     /bin/bash /cleanup.sh &&\
-    (rm -rf /cleanup.sh || true)
+    (rm -rf /cleanup.sh || true) &&\
+    rm -rf /bd_build
 
 CMD ["/sbin/my_init"]
 

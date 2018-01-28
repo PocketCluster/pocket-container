@@ -40,6 +40,7 @@ RUN apt-get remove -y build-essential python-dev python-setuptools python-pkg-re
     rm -rf /usr/local/bin/easy_install* &&\
 ## clean up
     /bin/bash /cleanup.sh &&\
-    (rm -rf /cleanup.sh || true)
+    (rm -rf /cleanup.sh || true) &&\
+    rm -rf /bd_build
 
 CMD ["/sbin/my_init"]
