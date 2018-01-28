@@ -237,10 +237,10 @@ function build_spark_driver() {
 	rm ${SPARK_BUILD_PATH}/Dockerfile
 }
 
-function build_jupyter_master() {
+function build_jupyter_core() {
 	local SHOULD_SQUASH=${1}
 	local JUPYTER_VERSION=4.2.1
-	local JUPYTER_BUILD_TARGET=${PLATFORM}-jupyter-master-${JUPYTER_VERSION}
+	local JUPYTER_BUILD_TARGET=${PLATFORM}-jupyter-core-${JUPYTER_VERSION}
 	local JUPYTER_BUILD_PATH=./${JUPYTER_BUILD_TARGET}
 	if [ ${SHOULD_SQUASH} -eq 1 ]; then
 		sed "s/BUILDCHAINTAG/${TAG}/g" ${JUPYTER_BUILD_PATH}/Dockerfile.template > ${JUPYTER_BUILD_PATH}/Dockerfile
@@ -254,7 +254,7 @@ function build_jupyter_master() {
 
 function squash_final_core() {
 	local JUPYTER_VERSION=4.2.1
-	local BUILD_TARGET=${PLATFORM}-jupyter-master-${JUPYTER_VERSION}
+	local BUILD_TARGET=${PLATFORM}-jupyter-core-${JUPYTER_VERSION}
 	TMPDIR=${TMP_DIR} docker-squash -t ${PREFIX}/${BUILD_TARGET}:${REL_TAG} ${PREFIX}/${BUILD_TARGET}:${TAG}
 }
 
@@ -263,5 +263,5 @@ function squash_final_core() {
 #build_hadoop_base 0 
 #build_hadoop_namenode 0
 #build_spark_driver 0
-build_jupyter_master 0
+#build_jupyter_core 0
 squash_final_core
