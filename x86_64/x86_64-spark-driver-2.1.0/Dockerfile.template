@@ -5,8 +5,8 @@ USER root
 
 # Spark specific bashrc
 COPY bashrc /
-COPY spark-launch.sh /etc/my_init.d/22-spark-launch.sh
-COPY spark-stop.sh   /etc/my_init.pre_shutdown.d/22-spark-stop.sh
+COPY spark-launch.sh /etc/my_init.post_runit.d/02-spark-launch.sh
+COPY spark-stop.sh   /etc/my_init.pre_shutdown.d/01-spark-stop.sh
 COPY spark-2.1.0-bin-without-hadoop.tgz /
 RUN  mkdir -p /etc/spark/
 COPY etc-spark/* /etc/spark/
@@ -28,8 +28,8 @@ RUN tar -xzf /spark-2.1.0-bin-without-hadoop.tgz &&\
     cat /bashrc >> $HOME/.bashrc &&\
     rm /bashrc &&\
 ## set execute permission
-    chmod a+x /etc/my_init.d/22-spark-launch.sh &&\
-    chmod a+x /etc/my_init.pre_shutdown.d/22-spark-stop.sh
+    chmod a+x /etc/my_init.post_runit.d/02-spark-launch.sh &&\
+    chmod a+x /etc/my_init.pre_shutdown.d/01-spark-stop.sh
 
 CMD ["/sbin/my_init"]
 

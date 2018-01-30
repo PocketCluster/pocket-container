@@ -295,6 +295,14 @@ def start_runit():
     return pid
 
 
+def run_post_runit_files():
+    for name in listdir("/etc/my_init.post_runit.d"):
+        filename = "/etc/my_init.post_runit.d/" + name
+        if is_exe(filename):
+            info("Running %s..." % filename)
+            run_command_killable_and_import_envvars(filename)
+
+
 def wait_for_runit_or_interrupt(pid):
     try:
         status = waitpid_reap_other_children(pid)
@@ -344,6 +352,9 @@ def main(args):
 
     if not args.skip_runit:
         runit_pid = start_runit()
+
+    run_post_runit_files()
+
     try:
         exit_status = None
         if len(args.main_command) == 0:
