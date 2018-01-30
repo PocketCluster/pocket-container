@@ -6,14 +6,12 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US.UTF-8' LC_ALL='en_US.UTF-8'
 USER root
 
 RUN apt-get update &&\
-    apt-get install -y --no-install-recommends --no-install-suggests --force-yes \
-    libpython2.7-minimal python-minimal python2.7-minimal \
+## install system dependencies
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends --no-install-suggests --force-yes \
+    build-essential libpython2.7-minimal python-minimal python2.7-minimal \
     libpython-stdlib libpython2.7-stdlib python-pkg-resources \
-    python python-setuptools python2.7 python-dev
-
-RUN apt-get install -y --no-install-recommends --no-install-suggests build-essential
-
-RUN easy_install pip &&\
+    python python-setuptools python2.7 python-dev python-pip &&\
+## install python dependencies
     pip install --upgrade --ignore-installed --force-reinstall --no-cache-dir pip &&\
     pip install --no-cache-dir numpy
 #    pip install --no-cache-dir scipy scikit-learn
@@ -25,7 +23,7 @@ RUN apt-get remove -y build-essential python-dev python-setuptools python-pkg-re
     apt-get autoclean &&\
     apt-get autoremove --purge -y &&\
 ## uninstall pip with pkg managers
-    pip uninstall -y pip &&\
+    #pip uninstall -y pip &&\
 ## remove cache
     rm -rf /root/.cache &&\
     rm -rf /usr/local/lib/python2.7/site-packages/* &&\

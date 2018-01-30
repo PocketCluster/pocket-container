@@ -222,10 +222,10 @@ function build_spark_slave() {
 	rm ${SPARK_BUILD_PATH}/Dockerfile
 }
 
-function build_jupyter_slave() {
+function build_jupyter_node() {
 	local SHOULD_SQUASH=${1}
 	local JUPYTER_VERSION=4.2.1
-	local JUPYTER_BUILD_TARGET=${PLATFORM}-jupyter-slave-${JUPYTER_VERSION}
+	local JUPYTER_BUILD_TARGET=${PLATFORM}-jupyter-node-${JUPYTER_VERSION}
 	local JUPYTER_BUILD_PATH=./${JUPYTER_BUILD_TARGET}
 	if [ ${SHOULD_SQUASH} -eq 1 ]; then
 		sed "s/BUILDCHAINTAG/${TAG}/g" ${JUPYTER_BUILD_PATH}/Dockerfile.template > ${JUPYTER_BUILD_PATH}/Dockerfile
@@ -237,9 +237,9 @@ function build_jupyter_slave() {
 	rm ${JUPYTER_BUILD_PATH}/Dockerfile
 }
 
-function squash_final_slave() {
+function squash_final_node() {
 	local JUPYTER_VERSION=4.2.1
-	local BUILD_TARGET=${PLATFORM}-jupyter-slave-${JUPYTER_VERSION}
+	local BUILD_TARGET=${PLATFORM}-jupyter-node-${JUPYTER_VERSION}
 	TMPDIR=${TMP_DIR} docker-squash -t ${PREFIX}/${BUILD_TARGET}:${REL_TAG} ${PREFIX}/${BUILD_TARGET}:${TAG}
 }
 
@@ -248,5 +248,5 @@ function squash_final_slave() {
 #build_hadoop_base 0
 #build_hadoop_datanode 0
 #build_spark_slave 0
-#build_jupyter_slave 0
-squash_final_slave
+build_jupyter_node 0
+squash_final_node
