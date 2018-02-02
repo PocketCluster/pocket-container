@@ -322,12 +322,22 @@ def poll_services_status():
             time.sleep(1)
 
 
-def run_post_runit_files():
-    for name in listdir("/etc/my_init.post_runit.d"):
-        filename = "/etc/my_init.post_runit.d/" + name
+# init container specific data services (hadoop, spark, etc) in system subshell
+def init_data_service():
+    for name in listdir("/etc/my_init.data_service_init.d"):
+        filename = "/etc/my_init.data_service_init.d/" + name
         if is_exe(filename):
-            info("Running %s..." % filename)
-            run_command_killable_and_import_envvars(filename)
+            info("Initialize %s..." % filename)
+            os.system(filename)
+
+
+# terminate container specific data services
+def term_data_service():
+    for name in listdir("/etc/my_init.data_service_term.d"):
+        filename = "/etc/my_init.data_service_term.d/" + name
+        if is_exe(filename):
+            info("Terminate %s..." % filename)
+            os.system(filename)
 
 
 def wait_for_runit_or_interrupt(pid):
@@ -372,7 +382,7 @@ def main(args):
         runit_pid = start_runit()
         poll_services_status()
 
-    run_post_runit_files()
+    init_data_service()
 
     try:
         exit_status = None
@@ -405,6 +415,9 @@ def main(args):
                 raise
         sys.exit(exit_status)
     finally:
+
+        term_data_service()
+
         if not args.skip_runit:
             run_pre_shutdown_scripts()
             shutdown_runit_services()

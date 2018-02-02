@@ -8,11 +8,11 @@ USER root
 RUN rm -f /etc/service/sshd/down
 
 # Prepare files
-COPY hadoop-launch.sh /etc/my_init.post_runit.d/01-hadoop-launch.sh
-COPY hadoop-stop.sh   /etc/my_init.pre_shutdown.d/02-hadoop-stop.sh
+COPY hadoop-launch.sh /etc/my_init.data_service_init.d/01-hadoop-launch.sh
+COPY hadoop-stop.sh   /etc/my_init.data_service_term.d/02-hadoop-stop.sh
 
-RUN chmod a+x /etc/my_init.post_runit.d/01-hadoop-launch.sh &&\
-    chmod a+x /etc/my_init.pre_shutdown.d/02-hadoop-stop.sh
+RUN chmod a+x /etc/my_init.data_service_init.d/01-hadoop-launch.sh &&\
+    chmod a+x /etc/my_init.data_service_term.d/02-hadoop-stop.sh
 
 CMD ["/sbin/my_init"]
 

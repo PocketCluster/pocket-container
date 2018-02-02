@@ -5,7 +5,8 @@ MAINTAINER PocketCluster <stkim1@pocketcluster.io>
 USER root
 
 # Prepare files
-COPY prepare.sh /etc/my_init.post_runit.d/01-prepare.sh
+COPY prepare.sh /etc/my_init.data_service_init.d/01-init-check.sh
+COPY prepare.sh /etc/my_init.data_service_term.d/01-term-check.sh
 COPY config /
 COPY id_rsa* /
 
@@ -19,7 +20,8 @@ RUN mkdir -p /var/run/sshd &&\
     chmod 0600 $HOME/.ssh/* &&\
     sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
-RUN chmod a+x /etc/my_init.post_runit.d/01-prepare.sh &&\
+RUN chmod a+x /etc/my_init.data_service_init.d/* &&\
+    chmod a+x /etc/my_init.data_service_term.d/* &&\
 ## Enable SSHD
     rm -f /etc/service/sshd/down &&\
 ## Install Debugging tools

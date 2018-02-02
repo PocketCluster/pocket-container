@@ -261,7 +261,7 @@ function squash_final_core() {
 #build_baseimage 0
 #build_openjdk 0
 #build_hadoop_base 0 
-#build_hadoop_namenode 0
-#build_spark_driver 0
-#build_jupyter_core 0
+build_hadoop_namenode 0
+build_spark_driver 0
+build_jupyter_core 0
 squash_final_core

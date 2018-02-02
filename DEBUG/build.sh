@@ -55,5 +55,5 @@ function build_hadoop_debug() {
 	rm ${BUILD_PATH}/Dockerfile
 }
 
-build_baseimage 0
+#build_baseimage 0
 build_hadoop_debug 0
