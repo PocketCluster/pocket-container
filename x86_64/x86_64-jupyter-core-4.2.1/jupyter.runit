@@ -3,4 +3,6 @@
 source /root/.bashrc
 export JUPYTER_CONFIG_DIR="/usr/local/share/jupyter/config" 
 
-exec /usr/local/bin/jupyter notebook >>/var/log/memcached.log 2>&1
+mkdir -p /pocket/jupyter/log
+
+exec /usr/local/bin/jupyter notebook --allow-root >> /pocket/jupyter/log/jupyter-pc-core.log 2>&1
