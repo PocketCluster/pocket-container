@@ -1,0 +1,36 @@
+FROM pc-master:5000/x86_64-hadoop-namenode-2.7.3:BUILDCHAINTAG
+MAINTAINER PocketCluster <stkim1@pocketcluster.io>
+
+USER root
+
+# Spark specific bashrc
+COPY bashrc /
+COPY spark-launch.sh /etc/my_init.data_service_init.d/02-spark-launch.sh
+COPY spark-stop.sh   /etc/my_init.data_service_term.d/01-spark-stop.sh
+COPY spark-2.1.0-bin-without-hadoop.tgz /
+RUN  mkdir -p /etc/spark/
+COPY etc-spark/* /etc/spark/
+
+#install spark 2.1.0
+RUN tar -xzf /spark-2.1.0-bin-without-hadoop.tgz &&\
+    rm /spark-2.1.0-bin-without-hadoop.tgz &&\
+    mv /spark-2.1.0-bin-without-hadoop /opt/spark &&\
+## cleanup
+    rm /opt/spark/bin/*.cmd &&\
+    rm -rf /opt/spark/data &&\
+    rm -rf /opt/spark/examples &&\
+    rm -rf /opt/spark/python/docs &&\
+    rm -rf /opt/spark/python/test_support &&\
+## setup & permission
+    chown -R root:root /opt/spark &&\
+    chown -R root:root /etc/spark &&\
+## base spark env variables 
+    cat /bashrc >> $HOME/.bashrc &&\
+    rm /bashrc &&\
+## set execute permission
+    chmod a+x /etc/my_init.data_service_init.d/02-spark-launch.sh &&\
+    chmod a+x /etc/my_init.data_service_term.d/01-spark-stop.sh
+
+CMD ["/sbin/my_init"]
+
+EXPOSE 4040 7001 7002 7003 7004 7005 7006 7077 8080 8081 8082
